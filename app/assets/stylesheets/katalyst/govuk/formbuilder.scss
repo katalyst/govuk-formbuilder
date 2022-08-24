@@ -1,0 +1,24 @@
+$govuk-include-default-font-face: false;
+$govuk-font-family: "Open Sans", sans-serif;
+
+@import "govuk-frontend/govuk/base";
+
+@import "govuk-frontend/govuk/core/all";
+@import "govuk-frontend/govuk/objects/all";
+
+@import "govuk-frontend/govuk/components/button";
+@import "govuk-frontend/govuk/components/checkboxes";
+@import "govuk-frontend/govuk/components/date-input";
+@import "govuk-frontend/govuk/components/error-message";
+@import "govuk-frontend/govuk/components/error-summary";
+@import "govuk-frontend/govuk/components/fieldset";
+@import "govuk-frontend/govuk/components/file-upload";
+@import "govuk-frontend/govuk/components/hint";
+@import "govuk-frontend/govuk/components/input";
+@import "govuk-frontend/govuk/components/label";
+@import "govuk-frontend/govuk/components/radios";
+@import "govuk-frontend/govuk/components/select";
+@import "govuk-frontend/govuk/components/textarea";
+
+@import "govuk-frontend/govuk/utilities/all";
+@import "govuk-frontend/govuk/overrides/all";

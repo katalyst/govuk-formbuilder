@@ -1,0 +1,15 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/node_modules/
+/spec/reports/
+/tmp/
+
+# rspec failure tracking
+.rspec_status
+
+# compiled assets
+/lib/assets
