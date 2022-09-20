@@ -1,7 +1,6 @@
+# frozen_string_literal: true
 
-lib = File.expand_path("../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "katalyst/govuk/formbuilder/version"
+require_relative "lib/katalyst/govuk/formbuilder/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "katalyst-govuk-formbuilder"
@@ -14,14 +13,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/katalyst/govuk-formbuilder"
   spec.license       = "MIT"
 
-  spec.metadata["allowed_push_host"] = "https://rubygems.org"
-
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage
-  spec.metadata["changelog_uri"] = spec.homepage
-
-  spec.files = Dir["lib/**/*", "CHANGELOG.md", "LICENSE.txt", "README.md"]
+  spec.files = Dir["app/assets/{javascripts,builds}/**/*", "{config,lib}/**/*", "CHANGELOG.md", "LICENSE.txt", "README.md"]
   spec.require_paths = %w[lib]
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.add_dependency "govuk_design_system_formbuilder"
 end

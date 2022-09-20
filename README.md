@@ -8,7 +8,7 @@ Repacking of [GOV.UK Frontend](https://frontend.design-system.service.gov.uk) an
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'katalyst-govuk-formbuilder'
+gem "katalyst-govuk-formbuilder"
 ```
 
 And then execute:
@@ -27,8 +27,21 @@ Add the stylesheet to your default layout:
 <%= stylesheet_link_tag "katalyst/govuk/formbuilder" %>
 ```
 
-You will also need GOVUK's design system javascript, which you can import via npm or importmaps. Please ensure that
-your javascript version matches the version packaged with this gem.
+Some GOVUK components require javascript enhancements 
+(see [GOVUK docs](https://frontend.design-system.service.gov.uk/get-started/#5-get-the-javascript-working)).
+
+You can use the provided helper to load the formbuilder esm from importmaps and enhance your form:
+
+```erbruby
+<%= form_with ... %>
+<%= govuk_formbuilder_init %>
+```
+
+You'll need to include the helper to make this method available, which you can add to your `ApplicationController`:
+
+```ruby
+helper Katalyst::GOVUK::FormBuilder::Frontend
+```
 
 ## Contributing
 

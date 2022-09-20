@@ -1,33 +1,26 @@
 require "bundler/gem_tasks"
 
-namespace :css do
+namespace "yarn" do
   desc "Install dependencies"
   task :install do
     sh <<~CMD
       yarn install
     CMD
   end
-
-  task compile: :install do
-    sh <<~CMD
-      yarn exec sass -- app/assets/stylesheets:lib/assets/stylesheets --load-path=node_modules
-    CMD
-  end
-
-  desc "Remove generated CSS"
-  task :clobber do
-    exec <<~CMD
-      find lib/assets -type f | xargs rm -f
-    CMD
-  end
 end
 
-# Default entry point
-desc "Generate CSS"
-task css: "css:compile"
+desc "Compile js/css with rollup"
+task build: "yarn:install" do
+  sh <<~CMD
+    yarn build && yarn build_css
+  CMD
+end
 
-# Add CSS dependencies to existing Rake tasks
-task build: :css
-task clobber: "css:clobber"
+desc "Remove generated js/css files"
+task clobber: "yarn:install" do
+  exec <<~CMD
+    yarn clean
+  CMD
+end
 
-task default: :css
+task default: :build
