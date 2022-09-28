@@ -2,7 +2,7 @@
 
 module Katalyst
   module GOVUK
-    module FormBuilder
+    module Formbuilder
       module Frontend
         def govuk_formbuilder_init
           tag.script type: "module", nonce: request.content_security_policy_nonce do
