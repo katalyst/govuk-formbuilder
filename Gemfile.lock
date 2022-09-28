@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    katalyst-govuk-formbuilder (1.1.0)
+    katalyst-govuk-formbuilder (1.1.1)
       govuk_design_system_formbuilder
 
 GEM
@@ -57,4 +57,4 @@ DEPENDENCIES
   rake
 
 BUNDLED WITH
-   2.3.19
+   2.3.22
