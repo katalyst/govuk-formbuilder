@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    katalyst-govuk-formbuilder (1.1.1)
+    katalyst-govuk-formbuilder (1.2.0)
       govuk_design_system_formbuilder
 
 GEM
@@ -50,6 +50,7 @@ GEM
       concurrent-ruby (~> 1.0)
 
 PLATFORMS
+  arm64-darwin-20
   arm64-darwin-21
 
 DEPENDENCIES
