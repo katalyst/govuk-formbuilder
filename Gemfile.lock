@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    katalyst-govuk-formbuilder (1.2.0)
+    katalyst-govuk-formbuilder (1.2.1)
       govuk_design_system_formbuilder
 
 GEM
@@ -37,7 +37,7 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     minitest (5.16.3)
-    nokogiri (1.13.8-arm64-darwin)
+    nokogiri (1.13.9-arm64-darwin)
       racc (~> 1.4)
     racc (1.6.0)
     rails-dom-testing (2.0.3)
