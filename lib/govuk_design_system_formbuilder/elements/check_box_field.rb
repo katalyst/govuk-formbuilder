@@ -4,7 +4,6 @@ require "govuk_design_system_formbuilder"
 
 module GOVUKDesignSystemFormBuilder
   module Builder
-
     # Generates a check box within a fieldset to be used as a boolean toggle for a single attribute.
     # The values are 1 (toggled on), and 0 (toggled off).
     #
@@ -25,14 +24,15 @@ module GOVUKDesignSystemFormBuilder
     # @return [ActiveSupport::SafeBuffer] HTML output
     #
     # @example A single check box for terms and conditions
-    #   = f.govuk_boolean_checkbox_field :terms_agreed,
+    #   = f.govuk_check_box_field :terms_agreed,
     #     link_errors: true,
     #     label: { text: 'Do you agree with our terms and conditions?' },
     #     hint: { text: 'You will not be able to proceed unless you do' }
     #
-    def govuk_boolean_checkbox_field(attribute_name, small: true, hint: {}, label: {}, link_errors: false, **kwargs, &block)
+    def govuk_check_box_field(attribute_name, value = 1, unchecked_value = 0,
+                              small: false, hint: {}, label: {}, link_errors: false, **kwargs, &block)
       govuk_check_boxes_fieldset(attribute_name, legend: nil, multiple: false, small: small) do
-        govuk_check_box(attribute_name, 1, 0,
+        govuk_check_box(attribute_name, value, unchecked_value,
                         hint:        hint,
                         label:       label,
                         link_errors: link_errors,

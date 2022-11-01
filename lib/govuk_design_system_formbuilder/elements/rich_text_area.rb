@@ -53,8 +53,6 @@ end
 
 module GOVUKDesignSystemFormBuilder
   module Builder
-    delegate :config, to: GOVUKDesignSystemFormBuilder
-
     # Generates a pair of +trix-toolbar+ and +trix-editor+ elements with a label, optional hint. Requires action-text to
     # be correctly setup in the application
     #
