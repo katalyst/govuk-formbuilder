@@ -40,7 +40,7 @@ You can use the provided helper to load the formbuilder esm from importmaps and 
 You'll need to include the helper to make this method available, which you can add to your `ApplicationController`:
 
 ```ruby
-helper Katalyst::GOVUK::FormBuilder::Frontend
+helper Katalyst::GOVUK::Formbuilder::Frontend
 ```
 
 ## Contributing
