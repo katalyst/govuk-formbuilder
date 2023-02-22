@@ -17,7 +17,7 @@ module GOVUKDesignSystemFormBuilder
     # @option label text [String] the label text
     # @option label size [String] the size of the label font, can be +xl+, +l+, +m+, +s+ or nil
     # @option label tag [Symbol,String] the label's wrapper tag, intended to allow labels to act as page headings
-    # @option label hidden [Boolean] control the visibility of the label. Hidden labels will still be read by screenreaders
+    # @option label hidden [Boolean] control the visibility of the label. Hidden labels will be read by screenreaders
     # @option label kwargs [Hash] additional arguments are applied as attributes on the +label+ element
     # @option kwargs [Hash] kwargs additional arguments are applied as attributes to the +input+ element
     # @param block [Block] any HTML passed in will form the contents of the fieldset
@@ -31,11 +31,11 @@ module GOVUKDesignSystemFormBuilder
     #
     def govuk_check_box_field(attribute_name, value = 1, unchecked_value = 0,
                               small: false, hint: {}, label: {}, link_errors: false, **kwargs, &block)
-      govuk_check_boxes_fieldset(attribute_name, legend: nil, multiple: false, small: small) do
+      govuk_check_boxes_fieldset(attribute_name, legend: nil, multiple: false, small:) do
         govuk_check_box(attribute_name, value, unchecked_value,
-                        hint:        hint,
-                        label:       label,
-                        link_errors: link_errors,
+                        hint:,
+                        label:,
+                        link_errors:,
                         multiple:    false,
                         exclusive:   false,
                         **kwargs, &block)

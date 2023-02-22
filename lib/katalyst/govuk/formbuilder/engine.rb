@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Katalyst
   module GOVUK
     module Formbuilder
@@ -8,7 +10,7 @@ module Katalyst
           katalyst/govuk/formbuilder.min.js
           katalyst/govuk/formbuilder.min.css
           katalyst/govuk/formbuilder.css
-        )
+        ).freeze
 
         initializer "katalyst-govuk-formbuilder.assets" do
           config.after_initialize do |app|

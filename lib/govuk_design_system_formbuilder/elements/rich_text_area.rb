@@ -100,7 +100,8 @@ module GOVUKDesignSystemFormBuilder
     #           }
     #
     def govuk_rich_text_area(attribute_name, hint: {}, label: {}, caption: {}, form_group: {}, **kwargs, &block)
-      Elements::RichTextArea.new(self, object_name, attribute_name, hint: hint, label: label, caption: caption, form_group: form_group, **kwargs, &block).html
+      Elements::RichTextArea.new(self, object_name, attribute_name,
+                                 hint:, label:, caption:, form_group:, **kwargs, &block).html
     end
   end
 end

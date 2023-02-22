@@ -4,6 +4,7 @@ module Katalyst
   module GOVUK
     module Formbuilder
       module Frontend
+        # rubocop:disable Rails/OutputSafety
         def govuk_formbuilder_init
           tag.script type: "module", nonce: request.content_security_policy_nonce do
             <<~JS.html_safe
@@ -13,6 +14,7 @@ module Katalyst
             JS
           end
         end
+        # rubocop:enable Rails/OutputSafety
       end
     end
   end

@@ -8,12 +8,13 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Katalyst Interactive"]
   spec.email         = ["developers@katalyst.com.au"]
 
-  spec.summary       = %q{Repackaging of UK.GOV forms for Rails 7 asset pipeline}
-  spec.description   = %q{UK.GOV form builder ready for use in Katalyst projects}
+  spec.summary       = "Repackaging of UK.GOV forms for Rails 7 asset pipeline"
+  spec.description   = "UK.GOV form builder ready for use in Katalyst projects"
   spec.homepage      = "https://github.com/katalyst/govuk-formbuilder"
   spec.license       = "MIT"
 
-  spec.files = Dir["app/assets/{javascripts,builds}/**/*", "{config,lib}/**/*", "CHANGELOG.md", "LICENSE.txt", "README.md"]
+  spec.files = Dir["app/assets/{javascripts,builds}/**/*", "{config,lib}/**/*", "CHANGELOG.md", "LICENSE.txt",
+                   "README.md"]
   spec.require_paths = %w[lib]
   spec.metadata["rubygems_mfa_required"] = "true"
 
