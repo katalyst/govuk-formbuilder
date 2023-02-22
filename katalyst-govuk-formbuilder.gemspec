@@ -13,8 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/katalyst/govuk-formbuilder"
   spec.license       = "MIT"
 
-  spec.files = Dir["app/assets/{javascripts,builds}/**/*", "{config,lib}/**/*", "CHANGELOG.md", "LICENSE.txt",
-                   "README.md"]
+  spec.files = Dir["app/assets/**/*", "{config,lib}/**/*", "CHANGELOG.md", "LICENSE.txt", "README.md"]
   spec.require_paths = %w[lib]
   spec.metadata["rubygems_mfa_required"] = "true"
 

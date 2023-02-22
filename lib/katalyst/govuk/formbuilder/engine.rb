@@ -5,17 +5,10 @@ module Katalyst
     module Formbuilder
       # Engine is responsible for adding assets to load path
       class Engine < ::Rails::Engine
-        PRECOMPILE_ASSETS = %w(
-          katalyst/govuk/formbuilder.js
-          katalyst/govuk/formbuilder.min.js
-          katalyst/govuk/formbuilder.min.css
-          katalyst/govuk/formbuilder.css
-        ).freeze
-
         initializer "katalyst-govuk-formbuilder.assets" do
           config.after_initialize do |app|
             if app.config.respond_to?(:assets)
-              app.config.assets.precompile += PRECOMPILE_ASSETS
+              app.config.assets.precompile += %w(katalyst-govuk-formbuilder.js)
             end
           end
         end

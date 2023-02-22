@@ -1,11 +1,11 @@
 {
   "name": "@katalyst/govuk-formbuilder",
   "module": "app/javascripts/katalyst/govuk/formbuilder.js",
-  "main": "app/assets/javascripts/katalyst/govuk/formbuilder.js",
+  "main": "app/assets/builds/katalyst/govuk/formbuilder.js",
   "scripts": {
     "build": "yarn exec rollup -- -c",
     "build_css": "yarn exec sass -- app/assets/stylesheets:app/assets/builds --load-path=node_modules --no-source-map",
-    "clean": "rm -rf app/assets/builds/* app/assets/javascripts/*"
+    "clean": "rm -rf app/assets/builds/*"
   },
   "dependencies": {
     "govuk-frontend": "^4.3.1"

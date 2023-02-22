@@ -12,5 +12,4 @@
 .rspec_status
 
 # compiled assets
-/app/assets/javascripts
 /app/assets/builds

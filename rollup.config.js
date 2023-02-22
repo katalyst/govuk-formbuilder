@@ -25,7 +25,7 @@ export default [
   {
     input: pkg.module,
     output: {
-      file: "app/assets/javascripts/katalyst/govuk/formbuilder.min.js",
+      file: "app/assets/builds/katalyst/govuk/formbuilder.min.js",
       format: "esm",
       inlineDynamicImports: true
     },
