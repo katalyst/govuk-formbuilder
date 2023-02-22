@@ -1,0 +1,146 @@
+@import "govuk-frontend/govuk/components/error-message/index";
+@import "govuk-frontend/govuk/components/hint/index";
+@import "govuk-frontend/govuk/components/label/index";
+
+@include govuk-exports("govuk/component/multi-select") {
+  .govuk-multi-select {
+    display: block;
+    position: relative;
+    @include govuk-font($size: 19, $line-height: 1.25);
+  }
+
+  .govuk-multi-select > .summary {
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box; // should this be global?
+
+    // This min-width was chosen because:
+    // - it makes the Select noticeably wider than it is taller (which is what users expect)
+    // - 11.5em matches the 'length-10' variant of the input component
+    // - it fits comfortably on screens as narrow as 240px wide
+    min-width: 10.5em; // less 1em for the arrow
+    max-width: 100%;
+    height: 40px;
+    @if $govuk-typography-use-rem {
+      height: govuk-px-to-rem(40px);
+    }
+    padding: govuk-spacing(1); // was 5px 4px 4px - size of it should be adjusted to match other form elements
+    padding-right: calc(5px + 1em); // 5px for the border, 0.5em for the arrow
+    border: $govuk-border-width-form-element solid $govuk-input-border-colour;
+
+    // Default user agent colours for selects can have low contrast,
+    // and may look disabled (#2435)
+    color: $govuk-text-colour;
+    background-color: govuk-colour("white");
+
+    &.placeholder {
+      color: $govuk-secondary-text-colour;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 50%;
+      margin-top: -4.5px;
+      width: 5px;
+      height: 5px;
+      right: 3px;
+      border-style: solid;
+      border-color: transparent $govuk-text-colour $govuk-text-colour transparent;
+      border-width: 1px;
+      pointer-events: none;
+      transform: rotate(45deg);
+    }
+  }
+
+  .govuk-multi-select > .summary:focus,
+  .govuk-multi-select[data-multi-select-open-value="true"] > .summary {
+    outline: $govuk-focus-width solid $govuk-focus-colour;
+    // Ensure outline appears outside of the element
+    outline-offset: 0;
+    // Double the border by adding its width again. Use `box-shadow` to do
+    // this instead of changing `border-width` (which changes element size) and
+    // since `outline` is already used for the yellow focus state.
+    box-shadow: inset 0 0 0 $govuk-border-width-form-element;
+  }
+
+  .govuk-multi-select [role=listbox] {
+    display: none;
+    list-style: none;
+    padding-left: 0;
+
+    &[aria-expanded="true"] {
+      display: block;
+      position: absolute;
+      top: calc(100% - $govuk-border-width-form-element - $govuk-focus-width);
+      left: 0;
+      z-index: 999;
+      width: 100%;
+      overflow-y: auto;
+      background: govuk-colour("white");
+      box-shadow: 0 3px 15px 0 #00000030;
+      border: $govuk-border-width-form-element solid $govuk-input-border-colour;
+    }
+  }
+
+  .govuk-multi-select [role=option] {
+    outline-offset: -4px;
+    position: relative;
+    padding: 0.5rem 1.25rem 0.5rem 2.25rem;
+    background: govuk-colour("white");
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.5rem;
+
+    &[selected] {
+      padding-right: 22px;
+    }
+
+    &[disabled] {
+      opacity: (.5);
+    }
+
+    &:hover {
+      background-color: $govuk-hover-colour;
+    }
+
+    &:focus,
+    &:active {
+      outline: none;
+      color: govuk-colour("white");
+      background-color: govuk-colour("blue");
+    }
+
+    &::after {
+      content: "";
+      width: 0.75rem;
+      height: 0.75rem;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      transform: translate(-50%, -50%);
+      border: 2px solid $govuk-text-colour;
+      background: $govuk-input-border-colour;
+      box-shadow: inset 0 0 0 1em govuk-colour("white");
+      transition: box-shadow .2s;
+    }
+
+    &[selected]::after {
+      box-shadow: inset 0 0 0 2px govuk-colour("white");
+      border: 2px solid $govuk-input-border-colour;
+    }
+  }
+
+  .govuk-multi-select--error > .summary {
+    border-color: $govuk-error-colour;
+
+    > .summary:focus {
+      border-color: $govuk-input-border-colour;
+    }
+  }
+
+}

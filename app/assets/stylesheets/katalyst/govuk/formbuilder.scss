@@ -23,4 +23,5 @@ $govuk-font-family: "Open Sans", sans-serif;
 @import "govuk-frontend/govuk/utilities/all";
 @import "govuk-frontend/govuk/overrides/all";
 
+@import "components/multi-select";
 @import "components/richtextarea";

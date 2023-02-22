@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require "katalyst/govuk/elements/collection_multi_select"
+
 require "govuk_design_system_formbuilder"
 require "govuk_design_system_formbuilder/elements/rich_text_area"
 require "govuk_design_system_formbuilder/elements/check_box_field"
+require "govuk_design_system_formbuilder/elements/collection_multi_select"
 
 require "katalyst/govuk/formbuilder/engine"
 require "katalyst/govuk/formbuilder/frontend"
