@@ -13,3 +13,6 @@
 
 # compiled assets
 /app/assets/builds
+
+# re-distributed assets
+/vendor/assets

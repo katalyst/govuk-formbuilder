@@ -1,5 +1,5 @@
 $govuk-include-default-font-face: false;
-$govuk-font-family: "Open Sans", sans-serif;
+$govuk-font-family: "Open Sans", sans-serif !default;
 
 @import "govuk-frontend/govuk/base";
 

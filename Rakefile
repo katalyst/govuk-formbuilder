@@ -12,7 +12,7 @@ end
 desc "Compile js/css with rollup"
 task build: "yarn:install" do
   sh <<~CMD
-    yarn build && yarn build_css
+    yarn build && yarn copy_css && yarn build_css
   CMD
 end
 

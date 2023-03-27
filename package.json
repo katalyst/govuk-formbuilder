@@ -5,7 +5,8 @@
   "scripts": {
     "build": "yarn exec rollup -- -c",
     "build_css": "yarn exec sass -- app/assets/stylesheets:app/assets/builds --load-path=node_modules --no-source-map",
-    "clean": "rm -rf app/assets/builds/*"
+    "copy_css": "rsync -avr --include='*/' --include='*.scss' --exclude='*' node_modules/govuk-frontend/govuk vendor/assets/stylesheets/govuk-frontend/",
+    "clean": "rm -rf app/assets/builds/* vendor/assets/stylesheets/*"
   },
   "dependencies": {
     "govuk-frontend": "^4.3.1"
