@@ -47,6 +47,14 @@ helper Katalyst::GOVUK::Formbuilder::Frontend
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/katalyst/govuk-formbuilder.
 
+## Release
+
+Update the version number in `lib/katalyst/govuk/formbuilder/version.rb` and run:
+
+```bash
+bundle exec rake release
+```
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
