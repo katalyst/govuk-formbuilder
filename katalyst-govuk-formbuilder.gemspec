@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "lib/katalyst/govuk/formbuilder/version"
-
 Gem::Specification.new do |spec|
   spec.name          = "katalyst-govuk-formbuilder"
-  spec.version       = Katalyst::GOVUK::Formbuilder::VERSION
+  spec.version       = "1.6.0"
   spec.authors       = ["Katalyst Interactive"]
   spec.email         = ["developers@katalyst.com.au"]
 

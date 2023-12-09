@@ -1,6 +1,6 @@
-@import "govuk-frontend/govuk/components/error-message/index";
-@import "govuk-frontend/govuk/components/hint/index";
-@import "govuk-frontend/govuk/components/label/index";
+@import "govuk-frontend/dist/govuk/components/error-message/index";
+@import "govuk-frontend/dist/govuk/components/hint/index";
+@import "govuk-frontend/dist/govuk/components/label/index";
 
 // Based on components/textarea
 @include govuk-exports("govuk/component/richtextarea") {
@@ -32,14 +32,14 @@
     }
 
     &:disabled {
-      opacity: .5;
+      opacity: 0.5;
       color: inherit;
       background-color: transparent;
       cursor: not-allowed;
     }
   }
 
-  .govuk-textarea--error {
+  .govuk-richtextarea--error {
     border-color: $govuk-error-colour;
 
     &:focus {
