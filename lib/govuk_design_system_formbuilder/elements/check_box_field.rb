@@ -30,15 +30,18 @@ module GOVUKDesignSystemFormBuilder
     #     hint: { text: 'You will not be able to proceed unless you do' }
     #
     def govuk_check_box_field(attribute_name, value = 1, unchecked_value = 0,
-                              small: false, hint: {}, label: {}, link_errors: false, **kwargs, &block)
+                              small: true, hint: {}, label: {}, link_errors: false, **kwargs, &block)
       govuk_check_boxes_fieldset(attribute_name, legend: nil, multiple: false, small:) do
-        govuk_check_box(attribute_name, value, unchecked_value,
-                        hint:,
-                        label:,
-                        link_errors:,
-                        multiple:    false,
-                        exclusive:   false,
-                        **kwargs, &block)
+        fieldset_context.pop # undo push from fieldset extension, labels should be bold unless already nested
+        checkbox = govuk_check_box(attribute_name, value, unchecked_value,
+                                   hint:,
+                                   label:,
+                                   link_errors:,
+                                   multiple:    false,
+                                   exclusive:   false,
+                                   **kwargs, &block)
+        fieldset_context.push attribute_name # restore push from fieldset
+        checkbox
       end
     end
   end
