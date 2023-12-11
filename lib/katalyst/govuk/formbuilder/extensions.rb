@@ -152,6 +152,22 @@ module GOVUKDesignSystemFormBuilder
         @builder.object.class.human_attribute_name(@attribute_name)
       end
     end
+
+    class Legend
+      def retrieve_text(supplied_text)
+        supplied_text.presence ||
+          localised_text(:legend).presence ||
+          human_attribute_name.presence ||
+          @attribute_name.to_s.humanize.capitalize.presence
+      end
+
+      def human_attribute_name
+        return unless @object_name.present? && @attribute_name.present?
+        return unless @builder.object&.class.respond_to?(:human_attribute_name)
+
+        @builder.object.class.human_attribute_name(@attribute_name)
+      end
+    end
   end
 
   module Containers
