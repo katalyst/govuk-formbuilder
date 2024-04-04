@@ -1,4 +1,4 @@
-import {Button, CharacterCount, Checkboxes, ErrorSummary, Radios} from "govuk-frontend/dist/govuk/all.mjs";
+import {Button, CharacterCount, Checkboxes, ErrorSummary, PasswordInput, Radios} from "govuk-frontend/dist/govuk/all.mjs";
 import {SupportError} from "govuk-frontend/dist/govuk/errors/index.mjs";
 import {isSupported} from "govuk-frontend/dist/govuk/common/index.mjs";
 
@@ -9,7 +9,7 @@ function initAll(config) {
     console.log(new SupportError());
     return;
   }
-  const components = [[Button, config.button], [CharacterCount, config.characterCount], [Checkboxes], [ErrorSummary, config.errorSummary], [Radios]];
+  const components = [[Button, config.button], [CharacterCount, config.characterCount], [Checkboxes], [ErrorSummary, config.errorSummary], [Radios], [PasswordInput, config.passwordInput]];
   const $scope = (_config$scope = config.scope) != null ? _config$scope : document;
   components.forEach(([Component, config]) => {
     const $elements = $scope.querySelectorAll(`[data-module="${Component.moduleName}"]`);
@@ -29,5 +29,6 @@ export {
   CharacterCount,
   Checkboxes,
   ErrorSummary,
+  PasswordInput,
   Radios
 }
