@@ -8,7 +8,7 @@ module Katalyst
         initializer "katalyst-govuk-formbuilder.assets" do
           config.after_initialize do |app|
             if app.config.respond_to?(:assets)
-              app.config.assets.paths << root.join("vendor/assets/stylesheets")
+              app.config.assets.paths << root.join("node_modules")
               app.config.assets.precompile += %w(katalyst-govuk-formbuilder.js)
             end
           end

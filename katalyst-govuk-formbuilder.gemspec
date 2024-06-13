@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "katalyst-govuk-formbuilder"
-  spec.version       = "1.9.2"
+  spec.version       = "1.9.3"
   spec.authors       = ["Katalyst Interactive"]
   spec.email         = ["developers@katalyst.com.au"]
 
@@ -11,7 +11,10 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/katalyst/govuk-formbuilder"
   spec.license       = "MIT"
 
-  spec.files = Dir["app/assets/**/*", "{config,lib,vendor}/**/*", "CHANGELOG.md", "LICENSE.txt", "README.md"]
+  spec.files = Dir["app/assets/**/*",
+                   "{config,lib}/**/*",
+                   "node_modules/govuk-frontend/dist/govuk/**/*.scss",
+                   "CHANGELOG.md", "LICENSE.txt", "README.md"]
   spec.require_paths = %w[lib]
   spec.metadata["rubygems_mfa_required"] = "true"
 
