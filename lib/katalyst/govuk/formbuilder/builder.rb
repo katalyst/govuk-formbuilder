@@ -180,7 +180,7 @@ module Katalyst
         #           }
         #
         def govuk_rich_text_area(attribute_name, hint: {}, label: {}, caption: {}, form_group: {}, **, &)
-          GOVUKDesignSystemFormBuilder::Elements::RichTextArea.new(
+          Elements::RichTextArea.new(
             self, object_name, attribute_name,
             hint:, label:, caption:, form_group:, **, &
           ).html
