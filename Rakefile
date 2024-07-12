@@ -3,6 +3,17 @@
 require "bundler/setup"
 require "bundler/gem_tasks"
 
+require "rubocop/katalyst/rake_task"
+RuboCop::Katalyst::RakeTask.new
+
+require "rubocop/katalyst/prettier_task"
+RuboCop::Katalyst::PrettierTask.new
+
+desc "Stub environment so tasks that assume Rails can run"
+task :environment do
+  # no-op
+end
+
 namespace "yarn" do
   desc "Install dependencies"
   task :install do
@@ -13,7 +24,7 @@ namespace "yarn" do
 end
 
 desc "Compile js/css with rollup"
-task build: "yarn:install" do
+task build: %w[yarn:install lint] do
   sh <<~CMD
     yarn build && yarn build_css
   CMD
