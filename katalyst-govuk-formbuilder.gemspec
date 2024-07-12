@@ -11,6 +11,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/katalyst/govuk-formbuilder"
   spec.license       = "MIT"
 
+  spec.required_ruby_version = ">= 3.1"
+
   spec.files = Dir["app/assets/**/*",
                    "{config,lib}/**/*",
                    "node_modules/govuk-frontend/dist/govuk/**/*.scss",

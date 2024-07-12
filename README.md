@@ -23,7 +23,7 @@ Or install it yourself as:
 
 Add the stylesheet to your default layout:
 
-```erbruby
+```erb
 <%= stylesheet_link_tag "katalyst/govuk/formbuilder" %>
 ```
 
@@ -32,7 +32,7 @@ Some GOVUK components require javascript enhancements
 
 You can use the provided helper to load the formbuilder esm from importmaps and enhance your form:
 
-```erbruby
+```erb
 <%= form_with ... %>
 <%= govuk_formbuilder_init %>
 ```
@@ -49,11 +49,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/kataly
 
 ## Release
 
-Update the version number in `lib/katalyst/govuk/formbuilder/version.rb` and run:
-
-```bash
-bundle exec rake release
-```
+Tag the release version and push to CI.
 
 ## License
 
