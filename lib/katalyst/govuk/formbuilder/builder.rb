@@ -111,7 +111,7 @@ module Katalyst
                                            hint_method = nil, hint: {}, legend: {}, caption: {}, inline: false,
                                            small: true, bold_labels: nil,
                                            include_hidden: config.default_collection_radio_buttons_include_hidden,
-                                           form_group: {}, **kwargs, &block)
+                                           form_group: {}, **, &)
           GOVUKDesignSystemFormBuilder::Elements::Radios::Collection.new(
             self,
             object_name,
@@ -128,8 +128,8 @@ module Katalyst
             bold_labels:,
             form_group:,
             include_hidden:,
-            **kwargs,
-            &block
+            **,
+            &
           ).html
         end
 
@@ -179,10 +179,10 @@ module Katalyst
         #             action:            "trix-initialize->content--editor--trix#trixInitialize",
         #           }
         #
-        def govuk_rich_text_area(attribute_name, hint: {}, label: {}, caption: {}, form_group: {}, **kwargs, &block)
+        def govuk_rich_text_area(attribute_name, hint: {}, label: {}, caption: {}, form_group: {}, **, &)
           GOVUKDesignSystemFormBuilder::Elements::RichTextArea.new(
             self, object_name, attribute_name,
-            hint:, label:, caption:, form_group:, **kwargs, &block
+            hint:, label:, caption:, form_group:, **, &
           ).html
         end
 

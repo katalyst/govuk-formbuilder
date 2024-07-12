@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    katalyst-govuk-formbuilder (1.9.4)
+    katalyst-govuk-formbuilder (1.10.0)
       govuk_design_system_formbuilder
 
 GEM
