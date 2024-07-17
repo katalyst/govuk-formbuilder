@@ -2,6 +2,7 @@
 
 require "active_support/inflector"
 require "govuk_design_system_formbuilder"
+require "rails/engine"
 
 module Katalyst
   module GOVUK
