@@ -1,0 +1,100 @@
+// assumes that hotwire_combobox is in the load paths, implies dartsass-rails is the compiler
+@use "hotwire_combobox";
+
+@import "govuk-frontend/dist/govuk/base";
+@import "govuk-frontend/dist/govuk/components/error-message/index";
+@import "govuk-frontend/dist/govuk/components/hint/index";
+@import "govuk-frontend/dist/govuk/components/label/index";
+
+// Based on components/select
+@include govuk-exports("govuk/component/combobox") {
+  .hw-combobox:has(.govuk-combobox) {
+    --hw-border-radius: 0;
+    --hw-border-width--slim: #{$govuk-border-width-form-element};
+    --hw-border-color: #{$govuk-input-border-colour};
+    --hw-focus-color: #{$govuk-focus-colour};
+    --hw-combobox-width: 100%;
+    --hw-combobox-width--multiple: 100%;
+    --hw-active-bg-color: #{govuk-colour("blue")};
+    --hw-padding--slim: #{govuk-spacing(1)};
+    --hw-padding--slimmer: #{govuk-spacing(1)};
+    --hw-padding--thick: #{govuk-spacing(1)};
+    --hw-font-size: 1rem;
+    --hw-line-height: 1.25;
+
+    display: flex;
+
+    .hw-combobox__main__wrapper {
+      // This min-width was chosen because:
+      // - it makes the Select wider than it is tall (which is what users expect)
+      // - 11.5em matches the 'length-10' variant of the input component
+      // - it fits comfortably on screens as narrow as 240px wide
+      min-width: 11.5em;
+      max-width: var(--text-width, 100%);
+
+      display: flex;
+      min-height: 2.5rem;
+      align-items: center;
+
+      // Default user agent colours for selects can have low contrast,
+      // and may look disabled (#2435)
+      color: $govuk-text-colour;
+      background-color: govuk-colour("white");
+    }
+
+    .hw-combobox__main__wrapper:focus-within {
+      outline: $govuk-focus-width solid $govuk-focus-colour;
+      // Ensure outline appears outside of the element
+      outline-offset: 0;
+      // Double the border by adding its width again. Use `box-shadow` to do
+      // this instead of changing `border-width` (which changes element size)
+      // and since `outline` is already used for the yellow focus state.
+      box-shadow: inset 0 0 0 $govuk-border-width-form-element;
+    }
+
+    .govuk-combobox {
+      @include govuk-font($size: 16, $line-height: 1.25);
+
+      // override input styles from form/govuk
+      border: none;
+      outline: none;
+      box-shadow: none;
+      width: 100%;
+      padding: 0;
+      height: unset;
+    }
+
+    // disabled
+    &:has(.govuk-combobox:disabled) {
+      opacity: 0.5;
+      color: inherit;
+      cursor: not-allowed;
+    }
+
+    // extend existing hover/active styles (--hw-active-bg-color)
+    .hw-combobox__option:hover,
+    .hw-combobox__option--navigated,
+    .hw-combobox__option--selected {
+      color: govuk-colour("white");
+    }
+
+    .hw-combobox__dialog__input {
+      width: 100%;
+    }
+
+    .hw-combobox__listbox {
+      left: -$govuk-border-width-form-element;
+      right: -$govuk-border-width-form-element;
+      top: calc(100% + $govuk-border-width-form-element * 2 + 0.2rem);
+      width: unset;
+    }
+  }
+
+  .govuk-combobox--error {
+    border-color: $govuk-error-colour;
+
+    .hw-combobox__main__wrapper:focus-within {
+      border-color: $govuk-input-border-colour;
+    }
+  }
+}

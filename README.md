@@ -27,6 +27,12 @@ Add the stylesheet to your default layout:
 <%= stylesheet_link_tag "katalyst/govuk/formbuilder" %>
 ```
 
+You can also add it to your SASS build:
+
+```scss
+@use "katalyst/govuk/formbuilder";
+```
+
 Some GOVUK components require javascript enhancements 
 (see [GOVUK docs](https://frontend.design-system.service.gov.uk/get-started/#5-get-the-javascript-working)).
 
@@ -41,6 +47,30 @@ You'll need to include the helper to make this method available, which you can a
 
 ```ruby
 helper Katalyst::GOVUK::Formbuilder::Frontend
+```
+
+## Extensions
+
+We include some optional extensions for integrating with gems that we (Katalyst) commonly use.
+
+These require additional steps to use.
+
+### Hotwire Combobox
+
+[Hotwire Combobox](https://hotwirecombobox.com) is a promising option for adding asynchronous multi-select inputs to
+Rails forms. We're assuming importmaps and Turbo if this option is used.
+
+There's no explicit dependency so if you want to use this input you'll need to add:
+
+```
+gem "hotwire_combobox"
+```
+
+JS is added by the gem automatically (via importmaps), but you'll need to explicitly add CSS:
+
+```scss
+@use "katalyst/govuk/formbuilder";
+@use "katalyst/govuk/components/combobox";
 ```
 
 ## Contributing

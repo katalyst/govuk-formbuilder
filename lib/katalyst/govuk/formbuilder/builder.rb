@@ -157,7 +157,7 @@ module Katalyst
         # @param form_group [Hash] configures the form group
         # @option form_group classes [Array,String] sets the form group's classes
         # @option form_group kwargs [Hash] additional attributes added to the form group
-        # @param block [Block] arbitrary HTML that will be rendered between the hint and the input
+        # @param & [Block] arbitrary HTML that will be rendered between the hint and the input
         # @return [ActiveSupport::SafeBuffer] HTML output
         #
         # @example A rich text area with injected content
@@ -184,6 +184,46 @@ module Katalyst
             self, object_name, attribute_name,
             hint:, label:, caption:, form_group:, **, &
           ).html
+        end
+
+        # Generates a +combobox+ element that uses Hotwire Combobox to generate a combobox selection element.
+        # @see https://hotwirecombobox.com
+        # @see https://github.com/josefarias/hotwire_combobox
+        #
+        # @param attribute_name [Symbol] The name of the attribute
+        # @param options_or_src [Array] The +option+ values or a source path for async combobox
+        # @param options [Hash] Options hash passed through to the +combobox+ helper
+        # @param hint [Hash,Proc] The content of the hint. No hint will be added if 'text' is left +nil+.
+        #   When a +Proc+ is supplied the hint will be wrapped in a +div+ instead of a +span+
+        # @option hint text [String] the hint text
+        # @option hint kwargs [Hash] additional arguments are applied as attributes to the hint
+        # @param label [Hash,Proc] configures or sets the associated label content
+        # @option label text [String] the label text
+        # @option label size [String] the size of the label font, can be +xl+, +l+, +m+, +s+ or nil
+        # @option label tag [Symbol,String] the label's wrapper tag, intended to allow labels to act as page headings
+        # @option label hidden [Boolean] control the visibility of the label.
+        #   Hidden labels will still be read by screenreaders
+        # @option label kwargs [Hash] additional arguments are applied as attributes on the +label+ element
+        # @param form_group [Hash] configures the form group
+        # @option form_group kwargs [Hash] additional attributes added to the form group
+        # @return [ActiveSupport::SafeBuffer] HTML output
+        #
+        # @example A combobox that allows the user to choose from a list of states
+        #
+        #   = f.combobox "state", State.all
+        #
+        # @example A combobox that allows the user to choose from an asynchronous states endpoint
+        #
+        #   = f.combobox "state", states_path
+        #
+        # @example A multi-select combobox that allows the user to choose multiple states
+        #
+        #   = f.combobox "state", State.all, multiselect_chip_src: states_chips_path
+        #
+        def govuk_combobox(attribute_name, options_or_src = [], options: {}, label: {}, hint: {}, form_group: {},
+                           caption: {}, **, &)
+          Elements::Combobox.new(self, object_name, attribute_name, options_or_src,
+                                 options:, label:, hint:, form_group:, caption:, **, &).html
         end
 
         # Keep track of whether we are inside a fieldset
