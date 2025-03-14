@@ -1,0 +1,15 @@
+*** node_modules/govuk-frontend/dist/govuk/tools/_px-to-rem.scss	Fri Mar 14 21:34:05 2025
+--- node_modules/govuk-frontend/dist/govuk/tools/_px-to-rem.scss	Fri Mar 14 21:36:05 2025
+***************
+*** 12,17 ****
+--- 12,21 ----
+  /// @access public
+  
+  @function govuk-px-to-rem($value) {
++   @if type-of($value) == "string" {
++     @return $value;
++   }
++ 
+    @if unitless($value) {
+      $value: $value * 1px;
+    }

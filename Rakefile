@@ -21,10 +21,19 @@ namespace "yarn" do
       yarn install
     CMD
   end
+
+  desc "Apply patches after install"
+  task :patch do
+    sh <<~CMD
+      for patch in patches/*; do
+        patch --strip=0 --forward --reject-file=- --input ${patch} || true
+      done
+    CMD
+  end
 end
 
 desc "Compile js/css with rollup"
-task build: %w[yarn:install lint] do
+task build: %w[yarn:install yarn:patch lint] do
   sh <<~CMD
     yarn build && yarn build_css
   CMD
