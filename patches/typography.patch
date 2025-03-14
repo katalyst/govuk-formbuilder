@@ -1,0 +1,15 @@
+*** node_modules/govuk-frontend/dist/govuk/helpers/_typography.scss	Fri Mar 14 21:34:10 2025
+--- node_modules/govuk-frontend/dist/govuk/helpers/_typography.scss	Fri Mar 14 21:37:14 2025
+***************
+*** 107,112 ****
+--- 107,116 ----
+  /// @access private
+  
+  @function _govuk-line-height($line-height, $font-size) {
++   @if type-of($line-height) == 'string' or type-of($font-size) == 'string' {
++     @return $line-height;
++   }
++ 
+    @if not unitless($line-height) and unit($line-height) == unit($font-size) {
+      $line-height: $line-height / $font-size;
+    }

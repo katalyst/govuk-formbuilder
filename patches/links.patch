@@ -1,0 +1,19 @@
+*** node_modules/govuk-frontend/dist/govuk/helpers/_links.scss	Fri Mar 14 23:19:20 2025
+--- node_modules/govuk-frontend/dist/govuk/helpers/_links.scss	Fri Mar 14 23:18:51 2025
+***************
+*** 121,127 ****
+    }
+  
+    &:hover {
+!     color: scale-color($govuk-error-colour, $lightness: -30%);
+    }
+  
+    &:active {
+--- 121,127 ----
+    }
+  
+    &:hover {
+!     color: #{color-mix(in hsl, #{$govuk-error-colour} 70%, black)};
+    }
+  
+    &:active {
