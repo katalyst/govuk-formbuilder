@@ -1,0 +1,59 @@
+////
+/// @group settings/layout
+////
+
+// =========================================================
+// Borders
+// =========================================================
+
+/// Standard border width
+///
+/// @type Number
+/// @access public
+
+$govuk-border-width: #{var(--govuk-border-width, 5px)} !default;
+
+/// Wide border width
+///
+/// @type Number
+/// @access public
+
+$govuk-border-width-wide: #{var(--govuk-border-width-wide, 10px)} !default;
+
+/// Narrow border width
+///
+/// @type Number
+/// @access public
+
+$govuk-border-width-narrow: #{var(--govuk-border-width-narrow, 4px)} !default;
+
+/// Form control border width
+///
+/// @type Number
+/// @access public
+
+$govuk-border-width-form-element: #{var(--govuk-border-width-form-element, 2px)} !default;
+
+/// Form group border width when in error state
+///
+/// @type Number
+/// @access public
+
+$govuk-border-width-form-group-error: #{var(
+    --govuk-border-width-form-group-error,
+    #{$govuk-border-width}
+  )} !default;
+
+/// Border width of focus outline
+///
+/// @type Number
+/// @access public
+
+$govuk-focus-width: #{var(--govuk-focus-width, 2px)} !default;
+
+/// Hover width for form controls with a hover state
+///
+/// @type Number
+/// @access public
+
+$govuk-hover-width: #{var(--govuk-hover-width, 10px)} !default;

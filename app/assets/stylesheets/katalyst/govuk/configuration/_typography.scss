@@ -1,0 +1,120 @@
+////
+/// @group settings/typography
+////
+
+// =========================================================
+// Font families
+// =========================================================
+
+/// Font families to use for all typography on screen media
+///
+/// @type List
+/// @access public
+
+$govuk-font-family: #{var(--govuk-font-family, var(--font-base, sans-serif))} !default;
+
+/// Font families to use for print media
+///
+/// We recommend that you use system fonts when printing. This will avoid issues
+/// with some printer drivers and operating systems.
+///
+/// @type List
+/// @access public
+
+$govuk-font-family-print: sans-serif !default;
+
+/// Include the default @font-face declarations
+///
+/// Defaults to true if "GDS Transport" appears in the $govuk-font-family
+/// setting.
+///
+/// @type Boolean
+/// @access public
+
+$govuk-include-default-font-face: false !default;
+
+// =========================================================
+// Font weights
+// =========================================================
+
+/// Font weight for regular typography
+///
+/// @type Number
+/// @access public
+$govuk-font-weight-regular: #{var(
+    --govuk-font-weight-regular,
+    var(--font-regular, 400)
+  )} !default;
+
+/// Font weight for bold typography
+///
+/// @type Number
+/// @access public
+$govuk-font-weight-bold: #{var(--govuk-font-weight-bold, var(--font-bold, 700))} !default;
+
+/// Typography font map
+///
+/// @type Map
+///
+/// @prop {Number} $point.$breakpoint.font-size - Font size for `$point` at `$breakpoint`
+/// @prop {Number} $point.$breakpoint.line-height - Line height for `$point` at `$breakpoint`
+/// @prop {Number} $point.print.font-size - Font size for `$point` when printing
+/// @prop {Number} $point.print.line-height - Line height for `$point` when printing
+///
+/// @access public
+
+$govuk-typography-scale: (
+  80: (
+    null: (
+      font-size: #{var(--size-step-5, 3rem)},
+      line-height: #{var(--leading-fine, 3.6rem)},
+    ),
+  ),
+  48: (
+    null: (
+      font-size: #{var(--size-step-4, 2.5rem)},
+      line-height: #{var(--leading-fine, 3rem)},
+    ),
+  ),
+  36: (
+    null: (
+      font-size: #{var(--size-step-3, 2rem)},
+      line-height: #{var(--leading-fine, 2.4rem)},
+    ),
+  ),
+  27: (
+    null: (
+      font-size: #{var(--size-step-2, 1.5rem)},
+      line-height: #{var(--leading-fine, 1.8rem)},
+    ),
+  ),
+  24: (
+    null: (
+      font-size: #{var(--size-step-1, 1.25rem)},
+      line-height: #{var(--leading-fine, 1.5rem)},
+    ),
+  ),
+  19: (
+    null: (
+      font-size: #{var(--size-step-0, 1rem)},
+      line-height: #{var(--leading-fine, 1.2rem)},
+    ),
+  ),
+  16: (
+    null: (
+      font-size: #{var(--size-step--1, 0.8rem)},
+      line-height: #{var(--leading-fine, 1rem)},
+    ),
+  ),
+  14: (
+    null: (
+      font-size: #{var(--size-step--2, 0.64rem)},
+      line-height: #{var(--leading-fine, 0.75rem)},
+    ),
+    deprecation: (
+      key: "govuk-typography-scale-14",
+      message: "14 on the type scale is deprecated and will be removed as " +
+        "a possible option in the next major version.",
+    ),
+  ),
+) !default;

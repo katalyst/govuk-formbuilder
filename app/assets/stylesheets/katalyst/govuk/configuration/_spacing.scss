@@ -1,0 +1,70 @@
+////
+/// @group settings/spacing
+////
+
+/// Single point spacing variables. Access using `govuk-spacing()`
+/// (see `helpers/spacing`).
+///
+/// @type Map
+/// @access private
+
+$govuk-spacing-points: (
+  0: 0,
+  1: 4px,
+  2: 8px,
+  3: 12px,
+  4: 16px,
+  5: 24px,
+  6: 32px,
+  7: 40px,
+  8: 48px,
+  9: 64px,
+) !default;
+
+/// Responsive spacing maps
+///
+/// These definitions are used to generate responsive spacing that adapts
+/// according to the breakpoints (see 'helpers/spacing'). These maps should be
+/// used wherever possible to standardise responsive spacing.
+///
+/// You can define different behaviour on tablet and desktop. The 'null'
+/// breakpoint is for mobile.
+///
+/// Access responsive spacing with `govuk-responsive-margin` or
+/// `govuk-responsive-padding` mixins (see `helpers/spacing`).
+///
+/// @type Map
+/// @access private
+
+$govuk-spacing-responsive-scale: (
+  0: (
+    null: 0,
+  ),
+  1: (
+    null: var(--space-3xs, 0.25rem),
+  ),
+  2: (
+    null: var(--space-2xs, 0.5rem),
+  ),
+  3: (
+    null: var(--space-xs, 0.75rem),
+  ),
+  4: (
+    null: var(--space-s, 1rem),
+  ),
+  5: (
+    null: var(--space-s, 1rem),
+  ),
+  6: (
+    null: var(--space-m, 1.5rem),
+  ),
+  7: (
+    null: var(--space-l, 2rem),
+  ),
+  8: (
+    null: var(--space-xl, 3rem),
+  ),
+  9: (
+    null: var(--space-2xl, 4rem),
+  ),
+) !default;

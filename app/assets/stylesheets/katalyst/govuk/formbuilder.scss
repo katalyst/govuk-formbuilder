@@ -1,10 +1,9 @@
-$govuk-include-default-font-face: false;
-$govuk-font-family: "Open Sans", sans-serif !default;
+@use "configuration" as *;
 
 @import "govuk-frontend/dist/govuk/base";
 
 @import "govuk-frontend/dist/govuk/core";
-@import "govuk-frontend/dist/govuk/objects";
+@import "govuk-frontend/dist/govuk/objects/form-group";
 
 @import "govuk-frontend/dist/govuk/components/checkboxes";
 @import "govuk-frontend/dist/govuk/components/date-input";
@@ -18,8 +17,5 @@ $govuk-font-family: "Open Sans", sans-serif !default;
 @import "govuk-frontend/dist/govuk/components/radios";
 @import "govuk-frontend/dist/govuk/components/select";
 @import "govuk-frontend/dist/govuk/components/textarea";
-
-@import "govuk-frontend/dist/govuk/utilities";
-@import "govuk-frontend/dist/govuk/overrides";
 
 @import "components/richtextarea";
