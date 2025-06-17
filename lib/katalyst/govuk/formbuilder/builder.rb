@@ -8,6 +8,34 @@ module Katalyst
 
         included do
           # Overwrite GOVUK default to set small to true
+          # @see GOVUKDesignSystemFormBuilder::Builder#govuk_collection_radio_buttons
+          def govuk_collection_radio_buttons(attribute_name, collection, value_method, text_method = nil,
+                                             hint_method = nil, hint: {}, legend: {}, caption: {}, inline: false,
+                                             small: true, bold_labels: nil,
+                                             include_hidden: config.default_collection_radio_buttons_include_hidden,
+                                             form_group: {}, **, &)
+            GOVUKDesignSystemFormBuilder::Elements::Radios::Collection.new(
+              self,
+              object_name,
+              attribute_name,
+              collection,
+              value_method:,
+              text_method:,
+              hint_method:,
+              hint:,
+              legend:,
+              caption:,
+              inline:,
+              small:,
+              bold_labels:,
+              form_group:,
+              include_hidden:,
+              **,
+              &
+            ).html
+          end
+
+          # Overwrite GOVUK default to set small to true
           # @see GOVUKDesignSystemFormBuilder::Builder#govuk_radio_buttons_fieldset
           def govuk_radio_buttons_fieldset(attribute_name, hint: {}, legend: {}, caption: {}, inline: false,
                                            small: true, form_group: {}, **kwargs, &block)
@@ -103,34 +131,6 @@ module Katalyst
             fieldset_context.push attribute_name # restore push from fieldset
             checkbox
           end
-        end
-
-        # Overwrite GOVUK default to set small to true
-        # @see GOVUKDesignSystemFormBuilder::Builder#govuk_collection_radio_buttons
-        def govuk_collection_radio_buttons(attribute_name, collection, value_method, text_method = nil,
-                                           hint_method = nil, hint: {}, legend: {}, caption: {}, inline: false,
-                                           small: true, bold_labels: nil,
-                                           include_hidden: config.default_collection_radio_buttons_include_hidden,
-                                           form_group: {}, **, &)
-          GOVUKDesignSystemFormBuilder::Elements::Radios::Collection.new(
-            self,
-            object_name,
-            attribute_name,
-            collection,
-            value_method:,
-            text_method:,
-            hint_method:,
-            hint:,
-            legend:,
-            caption:,
-            inline:,
-            small:,
-            bold_labels:,
-            form_group:,
-            include_hidden:,
-            **,
-            &
-          ).html
         end
 
         # Generates a pair of +trix-toolbar+ and +trix-editor+ elements with a label, optional hint.
