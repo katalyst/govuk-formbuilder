@@ -133,6 +133,29 @@ module Katalyst
           end
         end
 
+        # Generates a select for an enum defined in the model.
+        # @see GOVUKDesignSystemFormBuilder::Builder#govuk_collection_select
+        def govuk_enum_select(attribute_name, **, &)
+          govuk_collection_select(attribute_name, enum_values(attribute_name),
+                                  :itself, enum_labels_for(attribute_name), **, &)
+        end
+
+        # Generates a checkbox fieldset for an enum defined in the model.
+        #
+        # @api internal
+        # @see GOVUKDesignSystemFormBuilder::Builder#govuk_collection_check_boxes
+        def govuk_enum_check_boxes(attribute_name, **, &)
+          govuk_collection_check_boxes(attribute_name, enum_values(attribute_name),
+                                       :itself, enum_labels_for(attribute_name), **, &)
+        end
+
+        # Generates a radio buttons fieldset for an enum defined in the model.
+        # @see GOVUKDesignSystemFormBuilder::Builder#govuk_collection_radio_buttons
+        def govuk_enum_radio_buttons(attribute_name, **, &)
+          govuk_collection_radio_buttons(attribute_name, enum_values(attribute_name),
+                                         :itself, enum_labels_for(attribute_name), **, &)
+        end
+
         # Generates a pair of +trix-toolbar+ and +trix-editor+ elements with a label, optional hint.
         # Requires action-text to be correctly setup in the application
         #
@@ -230,6 +253,17 @@ module Katalyst
         # This allows labels to default to bold ("s") normally but use the default otherwise
         def fieldset_context
           @fieldset_context ||= []
+        end
+
+        private
+
+        def enum_values(attribute_name)
+          object.class.defined_enums[attribute_name.to_s].keys
+        end
+
+        def enum_labels_for(attribute_name)
+          model = object.class
+          ->(value) { model.human_attribute_name("#{attribute_name}.#{value}") }
         end
       end
     end
