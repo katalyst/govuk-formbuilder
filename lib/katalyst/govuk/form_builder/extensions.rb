@@ -4,11 +4,12 @@ require "govuk_design_system_formbuilder"
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Extensions
         extend ActiveSupport::Concern
 
         included do
+          GOVUKDesignSystemFormBuilder.include(Config)
           GOVUKDesignSystemFormBuilder::Builder.include(Builder)
           GOVUKDesignSystemFormBuilder::Elements::Label.include(Elements::Label)
           GOVUKDesignSystemFormBuilder::Elements::Legend.include(Elements::Legend)

@@ -2,7 +2,7 @@
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Containers
         module FieldsetContext
           def initialize(builder, object_name = nil, attribute_name = nil, &)

@@ -1,4 +1,4 @@
-# Katalyst::GOVUK::Formbuilder
+# Katalyst::GOVUK::FormBuilder
 
 Repacking of [GOV.UK Frontend](https://frontend.design-system.service.gov.uk) and
 [GOV.UK form components](https://govuk-form-builder.netlify.app) for use in Katalyst projects.
@@ -46,7 +46,7 @@ You can use the provided helper to load the formbuilder esm from importmaps and 
 You'll need to include the helper to make this method available, which you can add to your `ApplicationController`:
 
 ```ruby
-helper Katalyst::GOVUK::Formbuilder::Frontend
+helper Katalyst::GOVUK::FormBuilder::Frontend
 ```
 
 ## Extensions

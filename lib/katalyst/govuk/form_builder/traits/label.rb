@@ -4,7 +4,7 @@ require "govuk_design_system_formbuilder"
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Traits
         # Extend GovukDesignSystemFormBuilder::Traits::Label set the default size to small for non-nested labels.
         module Label

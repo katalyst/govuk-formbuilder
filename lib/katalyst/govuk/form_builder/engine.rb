@@ -6,14 +6,17 @@ require "rails/engine"
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       class Engine < ::Rails::Engine
         ActiveSupport::Inflector.inflections(:en) do |inflect|
           inflect.acronym "GOVUK"
         end
 
-        config.eager_load_namespaces << Katalyst::GOVUK::Formbuilder
         config.paths.add("lib", autoload_once: true)
+
+        initializer "katalyst-govuk-formbuilder.autoload", before: :setup_once_autoloader do
+          Rails.autoloaders.once.ignore File.expand_path(root.join("lib/katalyst-govuk-formbuilder.rb"))
+        end
 
         initializer "katalyst-govuk-formbuilder.assets" do
           config.after_initialize do |app|
@@ -25,7 +28,7 @@ module Katalyst
         end
 
         initializer "katalyst-govuk-formbuilder.extensions" do
-          GOVUKDesignSystemFormBuilder::Builder.include(Formbuilder::Extensions)
+          GOVUKDesignSystemFormBuilder::Builder.include(FormBuilder::Extensions)
         end
 
         initializer "katalyst-govuk-formbuilder.importmap", before: "importmap" do |app|

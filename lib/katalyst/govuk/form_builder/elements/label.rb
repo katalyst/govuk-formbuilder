@@ -4,7 +4,7 @@ require "govuk_design_system_formbuilder"
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Elements
         # Extend Elements::Label to add support for human_attribute_name as a fallback
         module Label

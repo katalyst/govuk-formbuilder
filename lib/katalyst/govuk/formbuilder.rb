@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
-require "active_support"
+require "katalyst-govuk-formbuilder"
 
+# Backwards compatibility for Koi 4
 module Katalyst
   module GOVUK
-    module Formbuilder
-      extend ActiveSupport::Autoload
-    end
+    Formbuilder = FormBuilder
   end
 end
-
-require "katalyst/govuk/formbuilder/engine"

@@ -4,7 +4,7 @@ require "govuk_design_system_formbuilder"
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Elements
         class RichTextArea < GOVUKDesignSystemFormBuilder::Base
           using GOVUKDesignSystemFormBuilder::PrefixableArray

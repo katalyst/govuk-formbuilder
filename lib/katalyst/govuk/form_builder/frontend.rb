@@ -2,7 +2,7 @@
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Frontend
         # rubocop:disable Rails/OutputSafety
         def govuk_formbuilder_init

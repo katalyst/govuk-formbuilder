@@ -2,7 +2,7 @@
 
 module Katalyst
   module GOVUK
-    module Formbuilder
+    module FormBuilder
       module Builder
         extend ActiveSupport::Concern
 
