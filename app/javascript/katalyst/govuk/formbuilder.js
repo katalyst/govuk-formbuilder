@@ -42,8 +42,11 @@ function initAll(config) {
   });
 }
 
+// stimulus controllers
+import controllers from "./controllers";
+
 export {
-  controllers,
+  controllers as default,
   initAll,
   Button,
   CharacterCount,

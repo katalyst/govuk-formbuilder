@@ -55,6 +55,16 @@ We include some optional extensions for integrating with gems that we (Katalyst)
 
 These require additional steps to use.
 
+### File inputs
+
+We've added image and document fields designed for use with Koi. These will not be suitable for
+every project. If you want to use these, you'll need to import and load their stimulus controllers:
+
+```js
+import govuk from "@katalyst/govuk-formbuilder";
+application.load(govuk);
+```
+
 ### Hotwire Combobox
 
 [Hotwire Combobox](https://hotwirecombobox.com) is a promising option for adding asynchronous multi-select inputs to
