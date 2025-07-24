@@ -3,6 +3,7 @@ import {
   CharacterCount,
   Checkboxes,
   ErrorSummary,
+  FileUpload,
   PasswordInput,
   Radios,
 } from "govuk-frontend/dist/govuk/all.mjs";
@@ -21,6 +22,7 @@ function initAll(config) {
     [CharacterCount, config.characterCount],
     [Checkboxes],
     [ErrorSummary, config.errorSummary],
+    [FileUpload, config.fileUpload],
     [Radios],
     [PasswordInput, config.passwordInput],
   ];
