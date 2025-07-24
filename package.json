@@ -8,13 +8,13 @@
     "clean": "rm -rf app/assets/builds/*"
   },
   "dependencies": {
-    "govuk-frontend": "^5.9.0"
+    "govuk-frontend": "^5.11.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "prettier": "^3.3.2",
-    "rollup": "^4.34.9",
+    "prettier": "^3.6.2",
+    "rollup": "^4.44.1",
     "sass": "^1.72.0"
   }
 }
