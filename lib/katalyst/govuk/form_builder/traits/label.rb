@@ -14,7 +14,7 @@ module Katalyst
             private
 
             def label_content
-              default = @builder.fieldset_context.count.positive? ? {} : { size: "s" }
+              default = @builder.fieldset_context.any? ? {} : { size: "s" }
 
               case @label
               when Hash
