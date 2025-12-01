@@ -13,8 +13,8 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "prettier": "^3.6.2",
-    "rollup": "^4.52.3",
-    "sass": "^1.93.2"
+    "prettier": "^3.7.3",
+    "rollup": "^4.53.3",
+    "sass": "^1.94.2"
   }
 }
