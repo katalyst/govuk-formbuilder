@@ -7,13 +7,25 @@ module Katalyst
         extend ActiveSupport::Concern
 
         included do
-          config_accessor(:document_mime_types) do
-            %w[image/png image/gif image/jpeg image/webp application/pdf audio/*].freeze
+          def document_mime_types
+            config.document_mime_types
           end
 
-          config_accessor(:image_mime_types) do
-            %w[image/png image/gif image/jpeg image/webp].freeze
+          def document_mime_types=(value)
+            config.document_mime_types = value
           end
+
+          config.document_mime_types = %w[image/png image/gif image/jpeg image/webp application/pdf audio/*].freeze
+
+          def image_mime_types
+            config.image_mime_types
+          end
+
+          def image_mime_types=(value)
+            config.image_mime_types = value
+          end
+
+          config.image_mime_types = %w[image/png image/gif image/jpeg image/webp].freeze
         end
       end
     end
