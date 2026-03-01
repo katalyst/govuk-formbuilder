@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    katalyst-govuk-formbuilder (1.24.0)
-      govuk_design_system_formbuilder (>= 5.13.0)
+    katalyst-govuk-formbuilder (1.25.0)
+      govuk_design_system_formbuilder (>= 6.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -28,6 +28,8 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    addressable (2.8.9)
+      public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
     bigdecimal (4.0.1)
@@ -37,7 +39,7 @@ GEM
     crass (1.0.6)
     drb (2.2.3)
     erubi (1.13.1)
-    govuk_design_system_formbuilder (5.13.0)
+    govuk_design_system_formbuilder (6.0.0)
       actionview (>= 6.1)
       activemodel (>= 6.1)
       activesupport (>= 6.1)
@@ -46,47 +48,55 @@ GEM
       activesupport (>= 6.1.4.4)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
-    json (2.18.0)
+    json (2.18.1)
+    json-schema (6.1.0)
+      addressable (~> 2.8)
+      bigdecimal (>= 3.1, < 5)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.25.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    minitest (6.0.1)
+    mcp (0.7.1)
+      json-schema (>= 4.1)
+    minitest (6.0.2)
+      drb (~> 2.0)
       prism (~> 1.5)
-    nokogiri (1.19.0-aarch64-linux-gnu)
+    nokogiri (1.19.1-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.0-arm64-darwin)
+    nokogiri (1.19.1-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.0-x86_64-linux-gnu)
+    nokogiri (1.19.1-x86_64-linux-gnu)
       racc (~> 1.4)
     parallel (1.27.0)
-    parser (3.3.10.0)
+    parser (3.3.10.2)
       ast (~> 2.4.1)
       racc
-    prism (1.7.0)
+    prism (1.9.0)
+    public_suffix (7.0.2)
     racc (1.8.1)
-    rack (3.2.4)
+    rack (3.2.5)
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.6.2)
-      loofah (~> 2.21)
+    rails-html-sanitizer (1.7.0)
+      loofah (~> 2.25)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rainbow (3.1.1)
     rake (13.3.1)
     regexp_parser (2.11.3)
-    rubocop (1.82.1)
+    rubocop (1.85.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
+      mcp (~> 0.6)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.48.0, < 2.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.49.0)
@@ -139,10 +149,7 @@ GEM
 
 PLATFORMS
   aarch64-linux
-  arm64-darwin-22
-  arm64-darwin-23
-  arm64-darwin-24
-  arm64-darwin-25
+  arm64-darwin
   x86_64-linux
 
 DEPENDENCIES
@@ -151,4 +158,4 @@ DEPENDENCIES
   rubocop-katalyst
 
 BUNDLED WITH
-  4.0.3
+  4.0.7
