@@ -14,7 +14,7 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^1.0.0",
     "prettier": "^3.8.1",
-    "rollup": "^4.59.0",
-    "sass": "^1.97.3"
+    "rollup": "^4.60.1",
+    "sass": "^1.98.0"
   }
 }
