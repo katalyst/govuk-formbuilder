@@ -20,6 +20,6 @@ Gem::Specification.new do |spec|
                    "node_modules/govuk-frontend/dist/govuk/**/*.scss",
                    "LICENSE.txt", "README.md"]
 
-  spec.metadata["changelog_uri"] = "https://github.com/katalyst/govuk-formbuilder/releases"
+  spec.metadata["changelog_uri"]         = "https://github.com/katalyst/govuk-formbuilder/releases"
   spec.metadata["rubygems_mfa_required"] = "true"
 end

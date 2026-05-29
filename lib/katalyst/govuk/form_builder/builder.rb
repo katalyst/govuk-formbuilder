@@ -38,11 +38,11 @@ module Katalyst
           # Overwrite GOVUK default to set small to true
           # @see GOVUKDesignSystemFormBuilder::Builder#govuk_radio_buttons_fieldset
           def govuk_radio_buttons_fieldset(attribute_name, hint: {}, legend: {}, caption: {}, inline: false,
-                                           small: true, form_group: {}, **kwargs, &block)
+                                           small: true, form_group: {}, **, &)
             GOVUKDesignSystemFormBuilder::Containers::RadioButtonsFieldset.new(
               self, object_name, attribute_name,
               hint:, legend:, caption:, inline:, small:, form_group:,
-              **kwargs, &block
+              **, &
             ).html
           end
 
@@ -51,7 +51,7 @@ module Katalyst
           def govuk_collection_check_boxes(attribute_name, collection, value_method, text_method, hint_method = nil,
                                            hint: {}, legend: {}, caption: {}, small: true, form_group: {},
                                            include_hidden: config.default_collection_check_boxes_include_hidden,
-                                           **kwargs, &block)
+                                           **, &)
             GOVUKDesignSystemFormBuilder::Elements::CheckBoxes::Collection.new(
               self,
               object_name,
@@ -66,15 +66,15 @@ module Katalyst
               small:,
               form_group:,
               include_hidden:,
-              **kwargs,
-              &block
+              **,
+              &
             ).html
           end
 
           # Overwrite GOVUK default to set small to true
           # @see GOVUKDesignSystemFormBuilder::Builder#govuk_check_boxes_fieldset
           def govuk_check_boxes_fieldset(attribute_name, legend: {}, caption: {}, hint: {}, small: true, form_group: {},
-                                         multiple: true, **kwargs, &block)
+                                         multiple: true, **, &)
             GOVUKDesignSystemFormBuilder::Containers::CheckBoxesFieldset.new(
               self,
               object_name,
@@ -85,8 +85,8 @@ module Katalyst
               small:,
               form_group:,
               multiple:,
-              **kwargs,
-              &block
+              **,
+              &
             ).html
           end
         end
@@ -163,7 +163,7 @@ module Katalyst
         #     hint: { text: 'You will not be able to proceed unless you do' }
         #
         def govuk_check_box_field(attribute_name, value = 1, unchecked_value = 0,
-                                  small: true, hint: {}, label: {}, link_errors: false, **kwargs, &block)
+                                  small: true, hint: {}, label: {}, link_errors: false, **, &)
           govuk_check_boxes_fieldset(attribute_name, legend: nil, multiple: false, small:) do
             fieldset_context.pop # undo push from fieldset extension, labels should be bold unless already nested
             checkbox = govuk_check_box(attribute_name, value, unchecked_value,
@@ -172,7 +172,7 @@ module Katalyst
                                        link_errors:,
                                        multiple:    false,
                                        exclusive:   false,
-                                       **kwargs, &block)
+                                       **, &)
             fieldset_context.push attribute_name # restore push from fieldset
             checkbox
           end

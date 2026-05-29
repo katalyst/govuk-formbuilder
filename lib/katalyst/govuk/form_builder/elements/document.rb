@@ -41,7 +41,7 @@ module Katalyst
           end
 
           def preview
-            options = {}
+            options          = {}
             add_option(options, :data, "#{stimulus_controller}_target", "preview")
             add_option(options, :class, "preview-file")
             options[:hidden] = "" unless preview?
