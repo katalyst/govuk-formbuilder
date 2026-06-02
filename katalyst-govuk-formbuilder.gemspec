@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "katalyst-govuk-formbuilder"
-  spec.version       = "1.26.0"
+  spec.version       = "1.26.1"
   spec.authors       = ["Katalyst Interactive"]
   spec.email         = ["developers@katalyst.com.au"]
 

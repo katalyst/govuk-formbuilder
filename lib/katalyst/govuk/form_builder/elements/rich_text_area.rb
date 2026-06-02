@@ -44,10 +44,14 @@ module Katalyst
 
           def options
             {
-              id:    field_id(link_errors: true),
+              id:    field_id,
               class: classes,
               aria:  { describedby: combine_references(hint_id, error_id, supplemental_id) },
             }
+          end
+
+          def label_content
+            super.merge(link_errors: false)
           end
         end
       end
