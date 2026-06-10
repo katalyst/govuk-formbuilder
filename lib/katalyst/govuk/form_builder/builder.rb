@@ -229,6 +229,10 @@ module Katalyst
         # @option label kwargs [Hash] additional arguments are applied as attributes on the +label+ element
         # @param form_group [Hash] configures the form group
         # @option form_group kwargs [Hash] additional attributes added to the form group
+        # @param before_input [String,Proc] the content injected before the input. No content will be added if +nil+
+        # @param after_input [String,Proc] the content injected after the input. No content will be added if +nil+
+        # @param & [Block] build the contents of the select element manually for exact control
+        # @see https://hotwirecombobox.com Hotwire Combobox's +combobox+ (called by govuk_combobox)
         # @return [ActiveSupport::SafeBuffer] HTML output
         #
         # @example A combobox that allows the user to choose from a list of states
@@ -244,9 +248,11 @@ module Katalyst
         #   = f.combobox "state", State.all, multiselect_chip_src: states_chips_path
         #
         def govuk_combobox(attribute_name, options_or_src = [], options: {}, label: {}, hint: {}, form_group: {},
-                           caption: {}, **, &)
-          Elements::Combobox.new(self, object_name, attribute_name, options_or_src,
-                                 options:, label:, hint:, form_group:, caption:, **, &).html
+                           caption: {}, before_input: nil, after_input: nil, **, &)
+          Elements::Combobox.new(
+            self, object_name, attribute_name, options_or_src,
+            options:, label:, hint:, form_group:, caption:, before_input:, after_input:, **, &
+          ).html
         end
 
         # Generates a file input element for uploading documents.

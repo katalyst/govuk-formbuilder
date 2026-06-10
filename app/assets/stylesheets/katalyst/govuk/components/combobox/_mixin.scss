@@ -1,0 +1,95 @@
+@use "govuk-frontend/dist/govuk/base";
+
+// Based on components/select
+@mixin styles {
+  /* GOVUK exceptions, assumes .hw-combobox is loaded first */
+  .hw-combobox:has(.govuk-combobox) {
+    --hw-border-radius: 0;
+    --hw-border-width--slim: #{base.$govuk-border-width-form-element};
+    --hw-border-color: #{base.govuk-functional-colour(input-border)};
+    --hw-focus-color: #{base.govuk-functional-colour(focus)};
+    --hw-combobox-width: 100%;
+    --hw-combobox-width--multiple: 100%;
+    --hw-active-bg-color: #{base.govuk-colour("blue")};
+    --hw-padding--slim: #{base.govuk-spacing(1)};
+    --hw-padding--slimmer: #{base.govuk-spacing(1)};
+    --hw-padding--thick: #{base.govuk-spacing(1)};
+    --hw-font-size: 1rem;
+    --hw-line-height: 1.25;
+
+    display: flex;
+
+    .hw-combobox__main__wrapper {
+      // This min-width was chosen because:
+      // - it makes the Select wider than it is tall (which is what users expect)
+      // - 11.5em matches the 'length-10' variant of the input component
+      // - it fits comfortably on screens as narrow as 240px wide
+      min-width: 11.5em;
+      max-width: var(--text-width, 100%);
+
+      display: flex;
+      min-height: 2.5rem;
+      align-items: center;
+
+      // Default user agent colours for selects can have low contrast,
+      // and may look disabled (#2435)
+      color: base.govuk-functional-colour(text);
+      background-color: base.govuk-colour("white");
+    }
+
+    .hw-combobox__main__wrapper:focus-within {
+      @include base.govuk-focused-form-input;
+    }
+
+    .govuk-combobox {
+      @include base.govuk-font($size: 16, $line-height: 1.25);
+
+      // override input styles from form/govuk
+      border: none;
+      outline: none;
+      box-shadow: none;
+      width: 100%;
+      padding: 0;
+      height: unset;
+    }
+
+    // disabled
+    &:has(.govuk-combobox:disabled) {
+      opacity: 0.5;
+      color: inherit;
+      cursor: not-allowed;
+    }
+
+    // extend existing hover/active styles (--hw-active-bg-color)
+    .hw-combobox__option:hover,
+    .hw-combobox__option--navigated,
+    .hw-combobox__option--selected {
+      color: base.govuk-colour("white");
+    }
+
+    .hw-combobox__dialog__input {
+      width: 100%;
+    }
+
+    .hw-combobox__listbox {
+      left: -(base.$govuk-border-width-form-element);
+      right: -(base.$govuk-border-width-form-element);
+      top: calc(100% + #{base.$govuk-border-width-form-element} * 2 + 0.2rem);
+      width: unset;
+    }
+
+    .hw-combobox__chip {
+      border: 1px solid black;
+      background-color: rgb(239, 239, 239);
+      border-radius: 3px;
+    }
+  }
+
+  .govuk-combobox--error {
+    border-color: base.govuk-functional-colour(error);
+
+    .hw-combobox__main__wrapper:focus-within {
+      border-color: base.govuk-functional-colour(input-border);
+    }
+  }
+}
