@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    katalyst-govuk-formbuilder (1.26.1)
-      govuk_design_system_formbuilder (>= 6.0.0)
+    katalyst-govuk-formbuilder (1.27.0)
+      govuk_design_system_formbuilder (>= 6.2.0)
 
 GEM
   remote: https://rubygems.org/
