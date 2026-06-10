@@ -16,7 +16,17 @@ module Katalyst
           include GOVUKDesignSystemFormBuilder::Traits::HTMLAttributes
           include GOVUKDesignSystemFormBuilder::Traits::HTMLClasses
 
-          def initialize(builder, object_name, attribute_name, hint:, label:, caption:, form_group:, **kwargs, &)
+          def initialize(
+            builder,
+            object_name,
+            attribute_name,
+            hint:,
+            label:,
+            caption:,
+            form_group:,
+            **kwargs,
+            &
+          )
             super(builder, object_name, attribute_name, &)
 
             @label           = label
@@ -46,7 +56,7 @@ module Katalyst
             {
               id:    field_id,
               class: classes,
-              aria:  { describedby: combine_references(hint_id, error_id, supplemental_id) },
+              aria:  { describedby: combine_references(hint_id, error_id) },
             }
           end
 
