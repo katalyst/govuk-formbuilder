@@ -70,7 +70,7 @@ module Katalyst
             {
               id:    field_id(link_errors: true),
               class: classes,
-              aria:  { describedby: combine_references(hint_id, error_id, supplemental_id) },
+              aria:  { describedby: combine_references(hint_id, error_id) },
             }
           end
 
