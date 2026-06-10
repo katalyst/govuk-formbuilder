@@ -11,9 +11,23 @@ module Katalyst
           include GOVUKDesignSystemFormBuilder::Traits::Label
           include GOVUKDesignSystemFormBuilder::Traits::Hint
           include GOVUKDesignSystemFormBuilder::Traits::HTMLAttributes
+          include GOVUKDesignSystemFormBuilder::Traits::ContentBeforeAndAfter
 
-          def initialize(builder, object_name, attribute_name, options_or_src, options:, form_group:, label:, hint:,
-                         caption:, **kwargs, &block)
+          def initialize(builder,
+                         object_name,
+                         attribute_name,
+                         options_or_src,
+                         options:,
+                         form_group:,
+                         label:,
+                         hint:,
+                         caption:,
+                         before_input:,
+                         after_input:,
+                         **kwargs,
+                         &block)
+            # assign the block to a variable rather than passing to super so
+            # we can send it through to #combobox
             super(builder, object_name, attribute_name)
             @block           = block
 
@@ -24,18 +38,29 @@ module Katalyst
             @options_or_src  = options_or_src
             @options         = options
             @html_attributes = kwargs
+            @before_input    = before_input
+            @after_input     = after_input
           end
 
           def html
             GOVUKDesignSystemFormBuilder::Containers::FormGroup.new(*bound, **@form_group).html do
-              safe_join([label_element, hint_element, error_element, combobox])
+              safe_join([
+                          label_element,
+                          hint_element,
+                          error_element,
+                          before_input_content,
+                          combobox,
+                          after_input_content,
+                        ])
             end
           end
 
           private
 
           def combobox
-            @builder.combobox(@attribute_name, @options_or_src, **@options, **attributes(@html_attributes), &@block)
+            attrs         = attributes(@html_attributes)
+            attrs[:class] = attrs.delete(:class).join(" ") # hotwire_combobox does not support flattening classes
+            @builder.combobox(@attribute_name, @options_or_src, **@options, **attrs, &@block)
           end
 
           def options

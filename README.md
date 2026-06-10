@@ -76,11 +76,18 @@ There's no explicit dependency so if you want to use this input you'll need to a
 gem "hotwire_combobox"
 ```
 
-JS is added by the gem automatically (via importmaps), but you'll need to explicitly add CSS:
+JS is added by the gem automatically (via importmaps), but you'll need to explicitly load their CSS before ours:
+
+```erb
+<%= combobox_style_tag %>
+<%= stylesheet_link_tag "katalyst/govuk/formbuilder" %>
+```
+
+Or, with Rails dartsass:
 
 ```scss
+@use "hotwire_combobox";
 @use "katalyst/govuk/formbuilder";
-@use "katalyst/govuk/components/combobox";
 ```
 
 ## Contributing
