@@ -194,20 +194,13 @@ module Katalyst
         #   = f.govuk_rich_text_area :instructions,
         #     label: -> { tag.h3("How do you set it up?") }
         #
-        # @example A rich text area with a custom direct upload url and a custom stimulus controller
-        #   = f.govuk_rich_text_area :description,
-        #     data: {
-        #             direct_upload_url: direct_uploads_url,
-        #             controller:        "content--editor--trix",
-        #             action:            "trix-initialize->content--editor--trix#trixInitialize",
-        #           }
-        #
-        def govuk_rich_text_area(attribute_name, hint: {}, label: {}, caption: {}, form_group: {}, **, &)
-          Elements::RichTextArea.new(
+        def govuk_rich_textarea(attribute_name, hint: {}, label: {}, caption: {}, form_group: {}, **, &)
+          Elements::RichTextarea.new(
             self, object_name, attribute_name,
             hint:, label:, caption:, form_group:, **, &
           ).html
         end
+        alias_method :govuk_rich_text_area, :govuk_rich_textarea
 
         # Generates a +combobox+ element that uses Hotwire Combobox to generate a combobox selection element.
         # @see https://hotwirecombobox.com

@@ -6,7 +6,7 @@ module Katalyst
   module GOVUK
     module FormBuilder
       module Elements
-        class RichTextArea < GOVUKDesignSystemFormBuilder::Base
+        class RichTextarea < GOVUKDesignSystemFormBuilder::Base
           using GOVUKDesignSystemFormBuilder::PrefixableArray
 
           include GOVUKDesignSystemFormBuilder::Traits::Error
@@ -38,18 +38,18 @@ module Katalyst
 
           def html
             GOVUKDesignSystemFormBuilder::Containers::FormGroup.new(*bound, **@form_group).html do
-              safe_join([label_element, supplemental_content, hint_element, error_element, rich_text_area])
+              safe_join([label_element, supplemental_content, hint_element, error_element, rich_textarea])
             end
           end
 
           private
 
-          def rich_text_area
-            @builder.rich_text_area(@attribute_name, **attributes(@html_attributes))
+          def rich_textarea
+            @builder.rich_textarea(@attribute_name, **attributes(@html_attributes))
           end
 
           def classes
-            build_classes(%(richtextarea), %(richtextarea--error) => has_errors?).prefix(brand)
+            build_classes(%(rich-textarea), %(rich-textarea--error) => has_errors?).prefix(brand)
           end
 
           def options

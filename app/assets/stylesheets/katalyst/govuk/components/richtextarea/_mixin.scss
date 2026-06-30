@@ -2,7 +2,7 @@
 
 /// @access private
 @mixin styles {
-  .govuk-richtextarea {
+  .govuk-rich-textarea {
     @include base.govuk-font($size: 19, $line-height: 1.25);
 
     box-sizing: border-box;
@@ -35,7 +35,7 @@
     }
   }
 
-  .govuk-richtextarea--error {
+  .govuk-rich-textarea--error {
     border-color: base.govuk-functional-colour(error);
 
     &:focus {
