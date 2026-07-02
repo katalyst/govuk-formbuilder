@@ -1,0 +1,55 @@
+/**
+ * Self-hosted fonts so a strict `style-src 'self'` CSP is satisfied without
+ * reaching out to rsms.me / fonts.googleapis.com. Font files live in
+ * app/assets/fonts and are served (digested) by propshaft from the same origin.
+ */
+
+:root {
+  --font-base: "InterVariable", sans-serif;
+  --font-mono: "Inconsolata", monospace;
+  --leading-micro: 0.85;
+  --leading-flat: 1;
+  --leading-fine: 1.2;
+  --leading-standard: 1.4;
+  --leading-loose: 1.7;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-bold: 700;
+  --font-black: 900;
+}
+
+/**
+ * Inter
+ * Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)
+ * SIL Open Font License 1.1
+ */
+
+@font-face {
+  font-family: InterVariable;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url("../inter-variable-v4-1.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: InterVariable;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url("../inter-variable-v4-1-italic.woff2") format("woff2");
+}
+
+/**
+ * Inconsolata
+ * Copyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)
+ * SIL Open Font License 1.1
+ */
+
+@font-face {
+  font-family: "Inconsolata";
+  font-style: normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url("../inconsolata-v37-latin-regular.woff2") format("woff2");
+}

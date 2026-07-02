@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Runs the dummy app plus rollup/sass watchers so the gem's JS and SCSS
+# recompile into app/assets/builds whenever they change.
+
+if ! gem list foreman -i --silent; then
+  echo "Installing foreman..."
+  gem install foreman
+fi
+
+exec foreman start -f Procfile.dev "$@"

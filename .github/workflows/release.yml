@@ -27,7 +27,7 @@ jobs:
           bin/setup
       - name: Build
         run: |
-          bundle exec rake
+          bundle exec rake build
       - uses: rubygems/release-gem@v1
       - name: Create GitHub release
         run: |

@@ -1,0 +1,11 @@
+<%# locals: (profiles:) %>
+
+<h1>Profiles</h1>
+
+<ul role="list">
+  <% @profiles.each do |profile| %>
+    <li><%= link_to(profile) %></li>
+  <% end %>
+</ul>
+
+<%= link_to("New profile", new_profile_path, class: "button") %>

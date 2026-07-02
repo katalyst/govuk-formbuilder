@@ -9,6 +9,13 @@ inherit_mode:
 
 AllCops:
   TargetRubyVersion: 4.0
+  Exclude:
+    # Dummy app (generated Rails boilerplate)
+    - spec/dummy/bin/*
+    - spec/dummy/config/**/*
+    - spec/dummy/db/**/*
+    - spec/dummy/tmp/**/*
+    - spec/dummy/node_modules/**/*
 
 Rails:
   Enabled: false

@@ -1,0 +1,16 @@
+<%# locals: (profile:) %>
+
+<h1><%= profile.name %></h1>
+
+<dl>
+  <dt>Email</dt>
+  <dd><%= profile.email %></dd>
+  <dt>Status</dt>
+  <dd><%= profile.status %></dd>
+  <dt>Country</dt>
+  <dd><%= profile.country %></dd>
+  <dt>Description</dt>
+  <dd><%= profile.description %></dd>
+</dl>
+
+<%= link_to("Edit", edit_profile_path(profile)) %>

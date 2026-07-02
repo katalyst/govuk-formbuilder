@@ -1,0 +1,19 @@
+<%# locals: (profile:) %>
+
+<%= form_with(model: profile) do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= f.govuk_text_field :name %>
+  <%= f.govuk_email_field :email %>
+  <%= f.govuk_text_area :bio %>
+  <%= f.govuk_number_field :age %>
+  <%= f.govuk_date_field :born_on %>
+  <%= f.govuk_check_box_field :active, label: { text: "Active profile" } %>
+  <%= f.govuk_enum_select :status %>
+  <%= f.govuk_combobox :country, Profile::COUNTRIES %>
+  <%= f.govuk_rich_textarea :description %>
+  <%= f.govuk_image_field :avatar %>
+  <%= f.govuk_document_field :cv %>
+
+  <%= f.govuk_submit %>
+<% end %>

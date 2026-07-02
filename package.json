@@ -5,6 +5,8 @@
   "scripts": {
     "build": "yarn exec rollup -- -c",
     "build_css": "yarn exec sass -- app/assets/stylesheets:app/assets/builds --load-path=node_modules --no-source-map",
+    "watch": "yarn exec rollup -- -c --watch",
+    "watch_css": "yarn exec sass -- app/assets/stylesheets:app/assets/builds --load-path=node_modules --no-source-map --watch",
     "clean": "rm -rf app/assets/builds/*"
   },
   "dependencies": {
