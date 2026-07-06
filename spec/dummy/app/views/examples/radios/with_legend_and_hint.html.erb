@@ -1,0 +1,13 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_collection_radio_buttons :new_department_id,
+          departments,
+          :id,
+          :name,
+          legend: { text: "Which department do you work for?" },
+          hint: { text: "There should be a sign near your desk" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

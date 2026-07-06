@@ -1,0 +1,13 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_collection_radio_buttons :lunch_id,
+          lunch_options,
+          :id,
+          :name,
+          :description,
+          legend: { text: "What would you like for lunch?" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

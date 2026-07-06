@@ -11,6 +11,8 @@ class CreateProfiles < ActiveRecord::Migration[8.0]
       t.integer :age
       t.integer :status, default: 0, null: false
       t.string :country
+      t.string :website
+      t.string :phone
 
       t.timestamps
     end

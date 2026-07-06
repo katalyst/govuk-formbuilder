@@ -1,0 +1,10 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_time_field :time_of_birth,
+          legend: { text: "Enter your time of birth" },
+          hint: { text: "For example, 12 30 45" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

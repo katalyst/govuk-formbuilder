@@ -1,0 +1,19 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_check_boxes_fieldset :languages, legend: { text: "Which languages do you speak?", size: "m" } do %>
+      <%= f.govuk_check_box :languages, :english,
+            label: { text: "English" },
+            link_errors: true,
+            hint: { text: "Only select English if you have a GCSE at grade C or above" } %>
+      <%= f.govuk_check_box :languages, :welsh, label: { text: "Welsh" } %>
+      <%= f.govuk_check_box :languages, :gaelic, label: { text: "Gaelic" } %>
+      <%= f.govuk_check_box :languages, :other, label: { text: "Other" } do %>
+        <%= f.govuk_text_field :other_language,
+              label: { text: "Which additional language do you speak?" } %>
+      <% end %>
+    <% end %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

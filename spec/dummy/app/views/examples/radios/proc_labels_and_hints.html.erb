@@ -1,0 +1,13 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_collection_radio_buttons :laptop,
+          laptops,
+          ->(option) { option },
+          ->(option) { I18n.t("laptops.names.#{option}") },
+          ->(option) { I18n.t("laptops.descriptions.#{option}") },
+          legend: { text: "Which laptop would you like to use?" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,11 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_text_area :job_description,
+          label: { text: "Job description" },
+          hint: { text: "Describe your typical day" },
+          rows: 9 %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

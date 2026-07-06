@@ -1,0 +1,10 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_submit "Save and continue" do %>
+      <a class="govuk-button govuk-button--secondary" href="/#">Safe as draft</a>
+      <button class="govuk-button govuk-button--warning">Delete and start again</button>
+      <a class="govuk-link" href="#">View recent changes</a>
+    <% end %>
+  <% end %>
+<% end %>

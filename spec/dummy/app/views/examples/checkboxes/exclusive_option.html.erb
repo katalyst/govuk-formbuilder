@@ -1,0 +1,14 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_check_boxes_fieldset :countries, legend: { text: "Will you be travelling to any of these countries?", size: "m" } do %>
+      <%= f.govuk_check_box :countries, :france, label: { text: "France" }, link_errors: true %>
+      <%= f.govuk_check_box :countries, :portugal, label: { text: "Portugal" } %>
+      <%= f.govuk_check_box :countries, :spain, label: { text: "Spain" } %>
+      <%= f.govuk_check_box_divider %>
+      <%= f.govuk_check_box :countries, :none, exclusive: true, label: { text: "No, I will not be travelling to any of these countries " } %>
+    <% end %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

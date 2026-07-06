@@ -1,0 +1,12 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_text_field :price_per_kg,
+          width: "one-quarter",
+          label: { text: "Price per kilogram" },
+          prefix_text: "£",
+          suffix_text: "per kg" %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

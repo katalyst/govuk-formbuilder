@@ -3,5 +3,16 @@
 Rails.application.routes.draw do
   resources :profiles
 
-  root to: "profiles#index"
+  # Guide pages that mirror the doc pages govuk_design_system_formbuilder ships
+  # (https://govuk-form-builder.netlify.app). Each page catalogues the rendered
+  # example forms for one component so we can click through and compare.
+  get "guide/:page", to: "guide#show", as: :guide_page, constraints: { page: /[a-z_]+/ }
+
+  # Every example renders in its own turbo frame, so each form is isolated to
+  # its own request: a lazy GET to render it and a POST to round-trip it.
+  match "guide/:page/:example", to: "examples#show", as: :example,
+                                via: %i[get post],
+                                constraints: { page: /[a-z_]+/, example: /[a-z_]+/ }
+
+  root to: "guide#index"
 end

@@ -1,0 +1,17 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_file_field :profile_photo,
+          label: { text: "Llwythwch ffeil i fyny" },
+          multiple: true,
+          javascript: true,
+          choose_files_button_text: "Dewiswch ffeil",
+          drop_instruction_text: "neu ollwng ffeil",
+          no_file_chosen_text: "Dim ffeil wedi'i dewis",
+          multiple_files_chosen_text: { "other" => "%{count} ffeil wedi'u dewis", "one" => "%{count} ffeil wedi'i dewis" },
+          entered_drop_zone_text: "Wedi mynd i mewn i'r parth gollwng",
+          left_drop_zone_text: "Parth gollwng i'r chwith" %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

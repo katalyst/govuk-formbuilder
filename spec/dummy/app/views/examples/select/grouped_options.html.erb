@@ -1,0 +1,16 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_select(:lunch_id, label: { text: "Preferred lunch", size: "m" }) do %>
+      <% grouped_lunch_options.each do |group_name, menu_items| %>
+        <optgroup label="<%= group_name %>">
+          <% menu_items.each do |name, value| %>
+            <option value="<%= value %>" data-tags="<%= name.downcase %>"><%= name %></option>
+          <% end %>
+        </optgroup>
+      <% end %>
+    <% end %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

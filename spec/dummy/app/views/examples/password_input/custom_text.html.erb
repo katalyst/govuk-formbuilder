@@ -1,0 +1,15 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_password_field(:password,
+          label: { text: "Password", tag: "h2", size: "l" },
+          show_password_text: "Mostra",
+          hide_password_text: "Nascondi",
+          show_password_aria_label_text: "Mostra la password",
+          hide_password_aria_label_text: "Nascondi la password",
+          password_shown_announcement_text: "La password è visibile",
+          password_hidden_announcement_text: "La password non è visibile") %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

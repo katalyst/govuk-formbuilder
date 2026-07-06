@@ -1,0 +1,13 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_collection_select :new_department_id,
+          departments,
+          :id,
+          :name,
+          label: { text: "Which department do you work in?" },
+          hint: { text: "You can find it on your ID badge" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

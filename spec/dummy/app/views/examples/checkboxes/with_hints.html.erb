@@ -1,0 +1,14 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_collection_check_boxes :lunch_ids,
+          lunch_options,
+          :id,
+          :name,
+          :description,
+          hint: { text: "Select all options you are happy to eat" },
+          legend: { text: "What are your preferred lunch options?" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

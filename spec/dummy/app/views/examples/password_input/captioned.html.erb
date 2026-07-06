@@ -1,0 +1,11 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_password_field(:password,
+          label: { text: "Password", tag: "h2", size: "l" },
+          caption: { text: "Security", size: "m" },
+          hint: { text: "Don't tell anyone your password" }) %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

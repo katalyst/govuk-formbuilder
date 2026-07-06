@@ -1,0 +1,22 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_check_boxes_fieldset :terms_and_conditions_agreed,
+          multiple: false,
+          legend: { text: "Terms and conditions", size: "l" } do %>
+      <p class="govuk-body">Our terms and conditions contain important information about:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>the application process</li>
+        <li>contacting us</li>
+        <li>our use of your data</li>
+        <li>checking you're safe to work with children</li>
+      </ul>
+      <%= f.govuk_check_box :terms_and_conditions_agreed, 1, 0,
+            multiple: false,
+            link_errors: true,
+            label: { text: "I agree to the terms and conditions" } %>
+    <% end %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

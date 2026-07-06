@@ -1,0 +1,11 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_date_field :graduation_month,
+          omit_day: true,
+          legend: { text: "When did you graduate?" },
+          hint: { text: "For example, 3 2014" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

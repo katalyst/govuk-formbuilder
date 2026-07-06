@@ -1,0 +1,14 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_collection_check_boxes :department_ids,
+          departments,
+          :id,
+          :name,
+          caption: nil,
+          legend: { text: "Which departments do you work in?" },
+          hint: { text: "Select all departments that apply" } %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

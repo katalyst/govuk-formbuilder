@@ -1,0 +1,10 @@
+<%# locals: (profile:) %>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_text_field :account_number,
+          label: { text: "Account number" },
+          inputmode: "numeric" %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,15 @@
+<h1>Textarea</h1>
+
+<p>
+  Mirrors the upstream <a href="https://govuk-form-builder.netlify.app/form-elements/textarea/">Textarea</a>
+  page. Each example below is a rendered form loaded in its own turbo frame.
+</p>
+
+<%= guide_example("textarea", "with_label_and_hint_and_nine_rows",
+      "Generating a textarea with a label, hint and nine rows") %>
+<%= guide_example("textarea", "max_words", "Generating a textarea with a word limit") %>
+<%= guide_example("textarea", "max_chars_and_threshold",
+      "Generating a textarea with a character limit and threshold") %>
+<%= guide_example("textarea", "custom_limit_text", "Customising the limit text") %>
+
+<p><%= link_to("Back to guide", root_path) %></p>
