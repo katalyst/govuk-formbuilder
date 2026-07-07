@@ -12,8 +12,8 @@
   <%= f.govuk_enum_select :status %>
   <%= f.govuk_combobox :country, Profile::COUNTRIES %>
   <%= f.govuk_rich_textarea :description %>
-  <%= f.govuk_image_field :avatar %>
-  <%= f.govuk_document_field :cv %>
+  <%= f.govuk_image_field :avatar, optional: true %>
+  <%= f.govuk_document_field :cv, optional: true %>
 
   <%= f.govuk_submit %>
 <% end %>
