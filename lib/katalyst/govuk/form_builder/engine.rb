@@ -27,8 +27,17 @@ module Katalyst
           end
         end
 
+        # Mix the extension modules into GOVUKDesignSystemFormBuilder once, after the main
+        # autoloader is set up. The modules in app/helpers stay reloadable, but a consuming
+        # app only needs them wired once: re-applying on every reload would accumulate stale
+        # copies in the (non-reloadable) GOVUKDesignSystemFormBuilder ancestor chain.
+        #
+        # When developing this gem, spec/dummy re-applies them via to_prepare so that edits
+        # to the extension modules are picked up on reload.
         initializer "katalyst-govuk-formbuilder.extensions" do
-          GOVUKDesignSystemFormBuilder::Builder.include(FormBuilder::Extensions)
+          config.after_initialize do
+            FormBuilder.inject_extensions!
+          end
         end
 
         initializer "katalyst-govuk-formbuilder.importmap", before: "importmap" do |app|

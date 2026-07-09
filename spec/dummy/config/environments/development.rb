@@ -8,6 +8,14 @@ Rails.application.configure do
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
+  # We're developing the gem itself here, so re-apply the GOVUKDesignSystemFormBuilder
+  # extensions on every reload. This picks up edits to the reloadable modules in
+  # app/helpers. The engine only applies them once (after_initialize), as this approach
+  # leaks copies of the modules into the upstream classes.
+  config.to_prepare do
+    Katalyst::GOVUK::FormBuilder.inject_extensions!
+  end
+
   # Do not eager load code on boot.
   config.eager_load = false
 
