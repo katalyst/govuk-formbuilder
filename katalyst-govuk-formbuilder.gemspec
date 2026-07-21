@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "katalyst-govuk-formbuilder"
-  spec.version       = "1.30.0"
+  spec.version       = "1.30.1"
   spec.authors       = ["Katalyst Interactive"]
   spec.email         = ["developers@katalyst.com.au"]
 
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "govuk_design_system_formbuilder", ">= 6.2.0"
 
-  spec.files = Dir["app/assets/**/*",
+  spec.files = Dir["app/{assets,helpers}/**/*",
                    "{config,lib}/**/*",
                    "node_modules/govuk-frontend/dist/govuk/**/*.scss",
                    "LICENSE.txt", "README.md"]
