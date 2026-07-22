@@ -23,7 +23,7 @@ export default [
         }
       })
     ],
-    external: ["@hotwired/stimulus", "@hotwired/turbo-rails", "trix"],
+    external: ["@hotwired/stimulus", "@hotwired/turbo-rails", "@rails/activestorage", "trix"],
   },
   {
     input: "katalyst/govuk/formbuilder.js",
@@ -33,13 +33,6 @@ export default [
       inlineDynamicImports: true,
       sourcemap: true
     },
-    plugins: [
-      resolve(),
-      terser({
-        mangle: true,
-        compress: true
-      })
-    ],
     context: "window",
     plugins: [
       resolve({
@@ -50,6 +43,6 @@ export default [
         compress: true
       })
     ],
-    external: ["@hotwired/stimulus", "@hotwired/turbo-rails", "trix"],
+    external: ["@hotwired/stimulus", "@hotwired/turbo-rails", "@rails/activestorage", "trix"],
   }
 ]
