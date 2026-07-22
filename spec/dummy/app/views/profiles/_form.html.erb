@@ -13,7 +13,9 @@
   <%= f.govuk_combobox :country, Profile::COUNTRIES %>
   <%= f.govuk_rich_textarea :description %>
   <%= f.govuk_image_field :avatar, optional: true %>
+  <%= f.govuk_image_field :gallery, multiple: true, optional: true %>
   <%= f.govuk_document_field :cv, optional: true %>
+  <%= f.govuk_file_field :cv, optional: true, javascript: true %>
 
   <%= f.govuk_submit %>
 <% end %>

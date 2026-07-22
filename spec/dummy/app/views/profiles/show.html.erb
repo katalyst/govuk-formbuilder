@@ -11,6 +11,24 @@
   <dd><%= profile.country %></dd>
   <dt>Description</dt>
   <dd><%= profile.description %></dd>
+  <dt>Avatar</dt>
+  <dd>
+    <% if profile.avatar.attached? %>
+      <%= image_tag profile.avatar, alt: profile.name %>
+    <% end %>
+  </dd>
+  <dt>Gallery</dt>
+  <dd>
+    <% profile.gallery.each do |image| %>
+      <%= image_tag image, alt: image.filename.to_s %>
+    <% end %>
+  </dd>
+  <dt>CV</dt>
+  <dd>
+    <% if profile.cv.attached? %>
+      <%= link_to profile.cv.filename.to_s, profile.cv %>
+    <% end %>
+  </dd>
 </dl>
 
 <%= link_to("Edit", edit_profile_path(profile)) %>

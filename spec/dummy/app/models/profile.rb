@@ -72,6 +72,7 @@ class Profile < ApplicationRecord
   has_rich_text :description
   has_one_attached :avatar
   has_one_attached :cv
+  has_many_attached :gallery
 
   COUNTRIES = ["Australia", "New Zealand", "United Kingdom", "Canada", "Ireland"].freeze
 

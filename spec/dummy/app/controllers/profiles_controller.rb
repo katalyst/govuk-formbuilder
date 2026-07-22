@@ -60,7 +60,9 @@ class ProfilesController < ApplicationController
       :name, :email, :bio, :active, :age, :status, :country,
       :description, :avatar, :cv,
       # govuk_date_field submits multiparameter date components
-      "born_on(1i)", "born_on(2i)", "born_on(3i)"
+      "born_on(1i)", "born_on(2i)", "born_on(3i)",
+      # has_many_attached submits an array of uploads / signed ids
+      gallery: []
     )
   end
 end

@@ -11,7 +11,7 @@ RSpec.describe "File field javascript" do
     it "previews the chosen image and can remove it", :aggregate_failures do
       visit new_profile_path
 
-      within(".govuk-image-field") do
+      within(avatar_field) do
         # No file chosen yet, so the preview is hidden.
         expect(page).to have_css("[data-govuk-image-field-target=preview]", visible: :hidden)
 
@@ -58,7 +58,7 @@ RSpec.describe "File field javascript" do
     it "highlights the field on dragenter and clears it on dragleave", :aggregate_failures do
       visit new_profile_path
 
-      field = find(".govuk-image-field")
+      field = avatar_field
 
       expect(field[:class]).not_to include("droppable")
 
@@ -68,6 +68,11 @@ RSpec.describe "File field javascript" do
       dispatch_drag_event(field, "dragleave")
       expect(field[:class]).not_to include("droppable")
     end
+  end
+
+  # The form renders two image fields (avatar and gallery); scope to avatar's.
+  def avatar_field
+    find(".govuk-image-field:has(input[name='profile[avatar]'])")
   end
 
   # Dispatches a DragEvent carrying an (empty) DataTransfer onto the element, so
