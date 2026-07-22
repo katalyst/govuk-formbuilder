@@ -6,7 +6,16 @@ require "rails_helper"
 # govuk_document_field (app/javascript/katalyst/govuk/controllers/*). These
 # enhance a plain file input with a live preview, a "remove" button and
 # drag-and-drop, none of which can be observed without a real browser.
-RSpec.describe "File field javascript" do
+RSpec.describe "Legacy file fields javascript" do
+  delegate :config, to: :GOVUKDesignSystemFormBuilder
+
+  around do |example|
+    config.use_legacy_file_fields = true
+    example.run
+  ensure
+    config.use_legacy_file_fields = false
+  end
+
   describe "image field" do
     it "previews the chosen image and can remove it", :aggregate_failures do
       visit new_profile_path

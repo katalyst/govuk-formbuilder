@@ -26,6 +26,16 @@ module Katalyst
           end
 
           config.image_mime_types = %w[image/png image/gif image/jpeg image/webp].freeze
+
+          def use_legacy_file_fields?
+            config.use_legacy_file_fields
+          end
+
+          def use_legacy_file_fields=(value)
+            config.use_legacy_file_fields = value
+          end
+
+          config.use_legacy_file_fields = false
         end
       end
     end
