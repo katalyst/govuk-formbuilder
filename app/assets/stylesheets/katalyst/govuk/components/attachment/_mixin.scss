@@ -1,0 +1,47 @@
+@use "govuk-frontend/dist/govuk/base";
+
+@mixin styles {
+  :where(.govuk-attachment) {
+    display: grid;
+    grid-template-areas: "preview caption actions";
+
+    .preview {
+      grid-area: preview;
+    }
+
+    .caption {
+      grid-area: caption;
+    }
+
+    .actions {
+      grid-area: actions;
+    }
+
+    // The remove button requires JavaScript; without it the select is the
+    // visible control.
+    .actions button {
+      display: none;
+    }
+  }
+
+  // With JavaScript running the button is the figure's only interactive
+  // control; the select still carries the submitted value but leaves the
+  // display, tab order, and accessibility tree.
+  .govuk-frontend-supported :where(.govuk-attachment) {
+    .actions select {
+      display: none;
+    }
+
+    .actions button {
+      display: revert;
+    }
+  }
+
+  // Hide duplicate inputs when multiple is not enabled, this allows reverting
+  // but the value from the last select will overwrite the others in save.
+  .govuk-file-upload-wrapper:has(input[type="file"]:not([multiple])) {
+    .govuk-attachment:has(+ .govuk-attachment) {
+      display: none;
+    }
+  }
+}

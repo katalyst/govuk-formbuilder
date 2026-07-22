@@ -1,0 +1,21 @@
+<%# locals: (profile:) %>
+<%#
+  Test-support forms for the attachment field's JavaScript enhancement
+  (spec/system/attachment/enhancement_spec.rb). These configurations are not
+  exercised by the profile form: a field with a hint (so the input carries
+  aria-describedby to pass through to the injected button) and a disabled
+  field (so the button mirrors the disabled state).
+%>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_image_field :avatar,
+          label: { text: "Profile photo" },
+          hint: { text: "Upload a clear colour photograph" } %>
+
+    <%= f.govuk_document_field :cv,
+          label: { text: "Curriculum vitae" },
+          disabled: true %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

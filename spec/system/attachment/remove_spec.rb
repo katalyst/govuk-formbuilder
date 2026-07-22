@@ -1,0 +1,98 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+# Removing an attachment figure with JavaScript. Together the examples pin
+# the behaviour of the remove control:
+#
+#   * each figure offers a remove control named after its file
+#   * removing deletes the figure from the DOM so its signed id no longer
+#     submits; Rails' auto-blank still clears an emptied has_many
+#   * focus moves to the next figure's control, else the previous one's,
+#     else the field's upload button — never lost to <body>
+#   * removal is announced through the field's announcements region, naming
+#     the file — the figure's own live region disappears with the figure
+RSpec.describe "Removing an attachment", :aggregate_failures do
+  include AttachmentFieldHelpers
+
+  let(:profile) do
+    create(:profile).tap do |p|
+      %w[first.png second.png].each do |filename|
+        p.gallery.attach(io: File.open(file_fixture("avatar.png")), filename:, content_type: "image/png")
+      end
+    end
+  end
+
+  before do
+    Capybara.enable_aria_label = true
+  end
+
+  after do
+    Capybara.enable_aria_label = false
+  end
+
+  it "offers a remove control on each figure whose accessible name includes the filename" do
+    visit edit_profile_path(profile)
+
+    %w[first.png second.png].each do |filename|
+      within(".govuk-attachment", text: filename) do
+        expect(page).to have_button("Remove #{filename}")
+      end
+    end
+  end
+
+  it "removes the figure so its value no longer submits" do
+    visit edit_profile_path(profile)
+
+    click_button "Remove first.png"
+
+    expect(page).to have_no_css(".govuk-attachment", text: "first.png")
+    expect(page).to have_css(".govuk-attachment", text: "second.png")
+
+    click_button "Continue"
+
+    expect(page).to have_current_path(profile_path(profile))
+    expect(profile.reload.gallery.blobs.map { |blob| blob.filename.to_s }).to eq(%w[second.png])
+  end
+
+  it "clears the association when every figure is removed" do
+    visit edit_profile_path(profile)
+
+    click_button "Remove first.png"
+    click_button "Remove second.png"
+
+    # Scoped: the required avatar keeps its own figure on the page.
+    expect(gallery_field).to have_no_css(".govuk-attachment")
+
+    click_button "Continue"
+
+    expect(page).to have_current_path(profile_path(profile))
+    expect(profile.reload.gallery).not_to be_attached
+  end
+
+  it "moves focus to the next figure's control, then falls back to the file input" do
+    visit edit_profile_path(profile)
+
+    click_button "Remove first.png"
+
+    # The next figure's remove control takes focus...
+    focused = "document.activeElement.getAttribute('aria-label') || document.activeElement.textContent"
+    expect(page.evaluate_script(focused)).to include("second.png")
+
+    click_button "Remove second.png"
+
+    # ...and with no figures left, this field's file upload button does — never <body>,
+    # and not some other field's input.
+    expect(
+      page.evaluate_script(%(document.activeElement.matches("button#profile-gallery-field"))),
+    ).to be(true)
+  end
+
+  it "announces the removal, naming the file" do
+    visit edit_profile_path(profile)
+
+    click_button "Remove first.png"
+
+    expect(announcements_region(gallery_field)).to have_text("first.png removed")
+  end
+end

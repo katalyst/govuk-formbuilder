@@ -76,7 +76,7 @@ class Profile < ApplicationRecord
 
   COUNTRIES = ["Australia", "New Zealand", "United Kingdom", "Canada", "Ireland"].freeze
 
-  validates :name, :email, presence: true
+  validates :name, :email, :avatar, presence: true
 
   def to_s
     name.presence || "New profile"

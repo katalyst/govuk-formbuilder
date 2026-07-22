@@ -14,5 +14,8 @@ Rails.application.routes.draw do
                                 via: %i[get post],
                                 constraints: { page: /[a-z_]+/, example: /[a-z_]+/ }
 
+  # System tests point fields here to hold direct uploads until released.
+  post "blocking_direct_uploads", to: "blocking_direct_uploads#create"
+
   root to: "guide#index"
 end

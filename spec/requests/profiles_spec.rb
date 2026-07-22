@@ -39,8 +39,33 @@ RSpec.describe "Profiles" do
     end
   end
 
+  # A failed submit re-renders the form in standard GOV.UK error style: the
+  # summary lists the failure and the errored field shows its message. The
+  # attachment fields share this scaffolding (their round-trip specs live with
+  # the gallery/avatar request specs).
+  describe "POST /profiles with invalid params" do
+    before { post profiles_path, params: { profile: { name: "", email: "ada@example.com" } } }
+
+    it "responds with unprocessable entity" do
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it "renders the validation message in the error summary" do
+      summary = Nokogiri::HTML(response.body).at_css(".govuk-error-summary")
+
+      expect(summary.text).to match(/can't be blank/i)
+    end
+
+    it "renders a field-level error message in GOV.UK error style" do
+      expect(Nokogiri::HTML(response.body).css("p.govuk-error-message")).to be_present
+    end
+  end
+
   describe "POST /profiles" do
-    let(:params) { { profile: { name: "Grace Hopper", email: "grace@example.com", status: "draft" } } }
+    let(:params) do
+      { profile: { name:   "Grace Hopper", email: "grace@example.com", status: "draft",
+                   avatar: fixture_file_upload("avatar.png", "image/png") } }
+    end
 
     it "creates a profile" do
       expect { post profiles_path, params: params }.to change(Profile, :count).by(1)

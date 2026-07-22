@@ -20,12 +20,19 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  config.include FactoryBot::Syntax::Methods
-
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
   # Lets system tests attach fixtures with `file_fixture_upload("avatar.png")`.
   config.file_fixture_path = File.expand_path("fixtures/files", __dir__)
+
+  config.define_derived_metadata(file_path: %r{spec/builders}) do |metadata|
+    metadata[:type] ||= :helper
+  end
+
+  # Remove active-storage uploads
+  config.after(:suite) do
+    FileUtils.rm_rf(Rails.application.root.join("tmp", "storage"))
+  end
 end

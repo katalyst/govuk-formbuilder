@@ -7,6 +7,9 @@ module Katalyst
         extend ActiveSupport::Concern
 
         included do
+          # Delegate image_tag for attachment previews
+          delegate :image_tag, to: :@template
+
           # Overwrite GOVUK default to set small to true
           # @see GOVUKDesignSystemFormBuilder::Builder#govuk_collection_radio_buttons
           def govuk_collection_radio_buttons(attribute_name, collection, value_method, text_method = nil,
@@ -248,6 +251,110 @@ module Katalyst
           ).html
         end
 
+        # Generates an input of type +file+ with active storage and preview support.
+        #
+        # @param attribute_name [Symbol] The name of the attribute
+        # @option label text [String] the label text
+        # @option label tag [Symbol,String] the label's wrapper tag, intended to allow labels to act as page headings
+        # @option label size [String] the size of the label font, can be +xl+, +l+, +m+, +s+ or nil
+        # @option label hidden [Boolean] control the visability of the label. Hidden labels will stil be read by
+        #   screenreaders
+        # @option label kwargs [Hash] additional arguments are applied as attributes on the +label+ element
+        # @param caption [Hash] configures or sets the caption content which is inserted above the label
+        # @option caption text [String] the caption text
+        # @option caption size [String] the size of the caption, can be +xl+, +l+ or +m+. Defaults to +m+
+        # @option caption kwargs [Hash] additional arguments are applied as attributes on the caption +span+ element
+        # @param hint [Hash,Proc] The content of the hint. No hint will be added if 'text' is left +nil+. When a
+        #   +Proc+ is supplied the hint will be wrapped in a +div+ instead of a +span+
+        # @option hint text [String] the hint text
+        # @option hint kwargs [Hash] additional arguments are applied as attributes to the hint
+        # @option kwargs [Hash] kwargs additional arguments are applied as attributes to the +input+ element
+        # @param form_group [Hash] configures the form group
+        # @option form_group kwargs [Hash] additional attributes added to the form group
+        # @param before_input [String,Proc] the content injected before the input. No content will be added if left
+        #   +nil+
+        # @param after_input [String,Proc] the content injected after the input. No content will be added if left
+        #   +nil+
+        # @param choose_files_button_text [String] The text of the button that opens the file picker. Default is
+        #   "Choose file". If javascript is not provided, this option will be ignored.
+        # @param drop_instruction_text [String] The text informing users they can drop files. Default is
+        #   "or drop file". If javascript is not provided, this option will be ignored.
+        # @param multiple_files_chosen_text [Hash] The text displayed when multiple files have been chosen by the
+        #   user. The component will replace the %{count} placeholder with the number of files selected. This uses
+        #   the govuk-frontend pluralisation rules. If javascript is not provided, this option will be ignored.
+        # @param multiple_files_chosen_one_text [String] The text displayed when JavaScript is enabled and one file
+        #   has been chosen by the user. The component will replace the %{count} placeholder with the number of files
+        #   selected. This can also be set by passing a hash with key +one:+ to +multiple_files_chosen_text+.
+        # @param multiple_files_chosen_other_text [String] The text displayed when JavaScript is enabled and multiple
+        #   files have been chosen by the user. The component will replace the %{count} placeholder with the number of
+        #   files selected. This can also be set by passing a hash with key +other:+ to +multiple_files_chosen_text+.
+        # @param no_file_chosen_text [String] The text displayed when no file has been chosen by the user. Default is
+        #   "No file chosen". If javascript is not provided, this option will be ignored.
+        # @param entered_drop_zone_text [String] The text announced by assistive technology when user drags files and
+        #   enters the drop zone. Default is "Entered drop zone". If javascript is not provided, this option will be
+        #   ignored.
+        # @param left_drop_zone_text [String] The text announced by assistive technology when user drags files and
+        #   leaves the drop zone without dropping. Default is "Left drop zone". If javascript is not provided, this
+        #   option will be ignored.
+        # @param & [Block] arbitrary HTML that will be rendered between the hint and the input
+        #
+        # @example A photo upload field with file type specifier and injected content
+        #   = f.govuk_attachment_field :photo, label: { text: 'Upload your photo' }, accept: 'image/*' do
+        #
+        #     p.govuk-inset-text
+        #       | Explicit images will result in account termination
+        #
+        # @example A CV upload field with label as a proc
+        #   = f.govuk_attachment_field :cv, label: -> { tag.h3('Upload your CV') }
+        #
+        # @see https://design-system.service.gov.uk/components/file-upload/ GOV.UK file upload
+        # @see https://design-system.service.gov.uk/styles/typography/#headings-with-captions Headings with captions
+        # @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file MDN documentation for file upload
+        def govuk_attachment_field(
+          attribute_name,
+          label: {},
+          caption: {},
+          hint: {},
+          form_group: {},
+          before_input: nil,
+          after_input: nil,
+          choose_files_button_text: nil,
+          drop_instruction_text: nil,
+          multiple_files_chosen_text: nil,
+          multiple_files_chosen_one_text: nil,
+          multiple_files_chosen_other_text: nil,
+          no_file_chosen_text: nil,
+          entered_drop_zone_text: nil,
+          left_drop_zone_text: nil,
+          direct_upload: true,
+          direct_upload_url: (self.direct_upload_url if direct_upload),
+          **,
+          &
+        )
+          Elements::Attachment.new(
+            self,
+            object_name,
+            attribute_name,
+            label:,
+            caption:,
+            hint:,
+            form_group:,
+            before_input:,
+            after_input:,
+            direct_upload_url:,
+            choose_files_button_text:,
+            drop_instruction_text:,
+            multiple_files_chosen_text:,
+            multiple_files_chosen_one_text:,
+            multiple_files_chosen_other_text:,
+            no_file_chosen_text:,
+            entered_drop_zone_text:,
+            left_drop_zone_text:,
+            **,
+            &
+          ).html
+        end
+
         # Generates a file input element for uploading documents.
         #
         # @example A upload field with label as a proc
@@ -261,9 +368,15 @@ module Katalyst
                                  mime_types: config.document_mime_types,
                                  **,
                                  &)
-          Elements::Document.new(
-            self, object_name, attribute_name, label:, caption:, hint:, form_group:, mime_types:, **, &
-          ).html
+          if config.use_legacy_file_fields
+            Elements::Document.new(
+              self, object_name, attribute_name, label:, caption:, hint:, form_group:, mime_types:, **, &
+            ).html
+          else
+            govuk_attachment_field(
+              attribute_name, label:, caption:, hint:, form_group:, accept: mime_types&.join(","), **, &
+            )
+          end
         end
 
         # Generates a file input element with a preview for uploading images.
@@ -309,9 +422,15 @@ module Katalyst
                               mime_types: config.image_mime_types,
                               **,
                               &)
-          Elements::Image.new(
-            self, object_name, attribute_name, label:, caption:, hint:, form_group:, mime_types:, **, &
-          ).html
+          if config.use_legacy_file_fields
+            Elements::Image.new(
+              self, object_name, attribute_name, label:, caption:, hint:, form_group:, mime_types:, **, &
+            ).html
+          else
+            govuk_attachment_field(
+              attribute_name, label:, caption:, hint:, form_group:, accept: mime_types&.join(","), **, &
+            )
+          end
         end
 
         # Keep track of whether we are inside a fieldset
@@ -321,6 +440,14 @@ module Katalyst
         end
 
         private
+
+        def direct_upload_url
+          if @template.respond_to?(:rails_direct_uploads_url)
+            @template.rails_direct_uploads_url
+          elsif @template.respond_to?(:main_app) && @template.main_app.respond_to?(:rails_direct_uploads_url)
+            @template.main_app.rails_direct_uploads_url
+          end
+        end
 
         def enum_values(attribute_name)
           object.class.defined_enums[attribute_name.to_s].keys
