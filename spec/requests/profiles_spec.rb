@@ -35,7 +35,7 @@ RSpec.describe "Profiles" do
     end
 
     it "emits the formbuilder javascript initialiser" do
-      expect(response.body).to include('import {initAll} from "@katalyst/govuk-formbuilder"')
+      expect(response.body).to include('import {init} from "@katalyst/govuk-formbuilder"')
     end
   end
 

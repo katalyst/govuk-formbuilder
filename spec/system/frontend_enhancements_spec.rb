@@ -3,11 +3,11 @@
 require "rails_helper"
 
 # Exercises the GOV.UK Frontend javascript that the gem bundles and wires up.
-# `initAll` (see Frontend#govuk_formbuilder_init) instantiates the upstream
-# components on page load, and the dummy app re-runs it on `turbo:frame-load`
-# (spec/dummy/app/javascript/application.js) so components inside the guide's
-# lazily-loaded example frames are enhanced too. Each example below lives in
-# its own lazy turbo frame, so a passing assertion proves both paths.
+# `govuk_formbuilder_init` enhances the page on load and observes <body>, so
+# components arriving later — such as the guide's lazily-loaded example
+# frames — are enhanced as they land, with no wiring in the consuming app.
+# Each example below lives in its own lazy turbo frame, so a passing
+# assertion proves the arrival path, not just page load.
 RSpec.describe "GOV.UK Frontend javascript enhancements" do
   it "enhances a password input with a working show/hide toggle", :aggregate_failures do
     visit guide_page_path("password_input")

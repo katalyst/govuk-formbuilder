@@ -5,14 +5,48 @@ import { createAttachment } from "./attachment_controller";
 
 export default class FileUploadController extends Controller {
   connect() {
-    const fileInput = this.fileInput;
-    let uploadButton = this.uploadButton;
+    if (!this.fileInput) {
+      throw new Error(`Missing file input for ${this.element}`);
+    }
 
     this.i18n = new I18n(FileUpload.defaults.i18n, { locale: "en" });
+    this.id = this.uploadButton?.id ?? this.fileInput.id;
 
-    if (!fileInput) throw new Error(`Missing file input for ${this.element}`);
+    // dragenter/dragleave are on the document so we can tell a move between
+    // child elements from truly leaving the drop zone; the document outlives
+    // any re-enhancement, so these bind once per controller lifecycle.
+    document.addEventListener("dragenter", this.onDragenter);
+    document.addEventListener("dragleave", this.onDragleave);
 
-    this.id = uploadButton?.id ?? fileInput.id;
+    this.enhance();
+
+    // A morph reconciles this element against a server response that has no
+    // JS-injected UI, in place and with no Stimulus lifecycle events (a
+    // morph that changes the surrounding structure instead recreates the
+    // element, which lands in connect()). The button vanishing without a
+    // disconnect is the signal to re-enhance.
+    this.morphObserver = new MutationObserver(this.onMorph);
+    this.morphObserver.observe(this.element, { childList: true });
+  }
+
+  disconnect() {
+    this.morphObserver?.disconnect();
+    this.disabledObserver?.disconnect();
+    this.uploadButton?.removeEventListener("click", this.onClick);
+    this.uploadButton?.removeEventListener("dragover", this.onDragover);
+    this.uploadButton?.removeEventListener("drop", this.onDrop);
+    this.unbindInput();
+    document.removeEventListener("dragenter", this.onDragenter);
+    document.removeEventListener("dragleave", this.onDragleave);
+    this.announcements?.remove();
+  }
+
+  // Builds the JS-only UI over the server-rendered markup: a pseudo button
+  // fronting the (hidden) input, and the assertive announcements region.
+  // Idempotent over fresh server markup or whatever a morph left behind.
+  enhance() {
+    const fileInput = this.fileInput;
+    let uploadButton = this.uploadButton;
 
     if (!uploadButton) {
       // The label's `for` still points at the input's original id (now the
@@ -23,17 +57,24 @@ export default class FileUploadController extends Controller {
       fileInput.toggleAttribute("hidden", true);
       uploadButton = createUploadButton(this.id, this.i18n, fileInput);
       fileInput.insertAdjacentElement("beforebegin", uploadButton);
+
+      // The button is the drop target; its listeners die with a stripped
+      // button and rebind with its replacement.
+      uploadButton.addEventListener("click", this.onClick);
+      uploadButton.addEventListener("dragover", this.onDragover);
+      uploadButton.addEventListener("drop", this.onDrop);
     }
 
     // Appended to the drop zone (not between button and input, whose
     // adjacency the uploadButton getter relies on).
     if (!this.announcements) this.element.appendChild(createAnnouncements());
 
-    uploadButton.addEventListener("click", this.onClick);
+    // A morph may retain the input node (its listeners survive) or replace
+    // it (they vanish); removing before adding makes rebinding safe in both.
+    this.unbindInput();
     fileInput.addEventListener("change", this.onChange);
     fileInput.addEventListener("govuk:upload", this.onUpload);
     fileInput.addEventListener("govuk:remove", this.onRemove);
-    this.bindDraggingEvents();
 
     // The injected button is not a real input, so it does not inherit the
     // file input's disabled state; mirror it, and keep mirroring it if the
@@ -44,15 +85,26 @@ export default class FileUploadController extends Controller {
     this.updateCount();
   }
 
-  disconnect() {
-    this.uploadButton?.removeEventListener("click", this.onClick);
+  unbindInput() {
     this.fileInput?.removeEventListener("change", this.onChange);
     this.fileInput?.removeEventListener("govuk:upload", this.onUpload);
     this.fileInput?.removeEventListener("govuk:remove", this.onRemove);
-    this.unbindDraggingEvents();
-    this.disabledObserver?.disconnect();
-    this.announcements?.remove();
   }
+
+  onMorph = () => {
+    if (this.uploadButton) return;
+
+    // The morphed-in server response is the truth: files still held by the
+    // input were either persisted (they came back as server figures) or
+    // lost with the refresh, and a File handle on a retained figure node is
+    // stale either way. Discard both, then rebuild the injected UI.
+    this.fileInput.value = "";
+    this.element.querySelectorAll("figure").forEach((figure) => {
+      delete figure.file;
+    });
+
+    this.enhance();
+  };
 
   // The label is rendered by the form group, outside the drop zone, and
   // carries only a `for` (no id). The injected button references `${id}-label`
@@ -64,6 +116,8 @@ export default class FileUploadController extends Controller {
   }
 
   updateDisabledState() {
+    if (!this.uploadButton) return;
+
     const disabled = this.fileInput.disabled;
 
     this.uploadButton.disabled = disabled;
@@ -74,6 +128,7 @@ export default class FileUploadController extends Controller {
   }
 
   observeDisabledState() {
+    this.disabledObserver?.disconnect();
     this.disabledObserver = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.attributeName === "disabled") this.updateDisabledState();
@@ -89,22 +144,7 @@ export default class FileUploadController extends Controller {
 
   // Drag & drop mirrors govuk-frontend's FileUpload: the button is the drop
   // target, the whole drop zone shows the dragging state, and enter/leave
-  // are announced. dragenter/dragleave are on the document so we can tell a
-  // move between child elements from truly leaving the drop zone.
-  bindDraggingEvents() {
-    this.uploadButton.addEventListener("dragover", this.onDragover);
-    this.uploadButton.addEventListener("drop", this.onDrop);
-    document.addEventListener("dragenter", this.onDragenter);
-    document.addEventListener("dragleave", this.onDragleave);
-  }
-
-  unbindDraggingEvents() {
-    this.uploadButton?.removeEventListener("dragover", this.onDragover);
-    this.uploadButton?.removeEventListener("drop", this.onDrop);
-    document.removeEventListener("dragenter", this.onDragenter);
-    document.removeEventListener("dragleave", this.onDragleave);
-  }
-
+  // are announced.
   // Prevent the default so the button is a valid drop target.
   onDragover = (event) => {
     event.preventDefault();

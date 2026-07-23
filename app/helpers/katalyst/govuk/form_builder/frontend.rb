@@ -4,14 +4,17 @@ module Katalyst
   module GOVUK
     module FormBuilder
       module Frontend
+        # Marks the page as JS-capable and enhances govuk-frontend components,
+        # on load and as the DOM changes (Turbo morphs, lazily-loaded frames,
+        # stream inserts). Render at the end of <body>; on a Turbo replace
+        # render the snippet re-executes with the new body, and everything it
+        # sets up is scoped to the body element it ran against.
         # rubocop:disable Rails/OutputSafety
         def govuk_formbuilder_init
           tag.script type: "module", nonce: request.content_security_policy_nonce do
             <<~JS.html_safe
-              document.body.classList.toggle("js-enabled", true);
-              document.body.classList.toggle("govuk-frontend-supported", ('noModule' in HTMLScriptElement.prototype));
-              import {initAll} from "@katalyst/govuk-formbuilder";
-              initAll();
+              import {init} from "@katalyst/govuk-formbuilder";
+              init();
             JS
           end
         end
