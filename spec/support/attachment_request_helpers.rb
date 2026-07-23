@@ -15,6 +15,12 @@ module AttachmentRequestHelpers
     )
   end
 
+  # A file arriving through the type=file input (the no-JS multipart path),
+  # named so specs can tell it apart from fixtures and persisted files.
+  def multipart_upload(filename, fixture: file_fixture("avatar.png"), content_type: "image/png")
+    Rack::Test::UploadedFile.new(fixture.open, content_type, original_filename: filename)
+  end
+
   def figures
     Nokogiri::HTML(response.body).css("figure.govuk-attachment")
   end

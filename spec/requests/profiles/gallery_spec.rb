@@ -147,5 +147,33 @@ RSpec.describe "Updating a profile's gallery" do
         expect(figure_for("just-uploaded.png")).to be_present
       end
     end
+
+    # Files arriving as multipart uploads (the no-JS path) have no bytes in
+    # storage until save, which the failing validation prevents — and
+    # browsers never repopulate file inputs, so left alone the upload would
+    # be lost. The field persists pending uploads when it renders, so they
+    # re-render as figures whose signed ids round-trip alongside the
+    # persisted entries.
+    describe "keeping the persisted blob and adding a multipart upload" do
+      before { submit_invalid(persisted.signed_id, multipart_upload("fresh.png")) }
+
+      it "responds unprocessable rather than failing to render" do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+
+      it "re-renders the persisted attachment as a figure" do
+        expect(figure_for("persisted.png")).to be_present
+      end
+
+      it "re-renders the multipart upload as a figure" do
+        expect(figure_for("fresh.png")).to be_present
+      end
+
+      it "preserves the upload as a signed id that round-trips" do
+        signed_id = kept_signed_id(figure_for("fresh.png"))
+
+        expect(ActiveStorage::Blob.find_signed(signed_id)&.filename&.to_s).to eq("fresh.png")
+      end
+    end
   end
 end

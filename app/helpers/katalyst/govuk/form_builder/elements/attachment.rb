@@ -29,7 +29,9 @@ module Katalyst
           end
 
           def file_with_javascript_markup
-            tag.div(class: "#{brand}-file-upload-wrapper", data: { controller: "#{brand}-file-upload" }, **i18n_data) { file }
+            tag.div(class: "#{brand}-file-upload-wrapper", data: { controller: "#{brand}-file-upload" }, **i18n_data) do
+              file
+            end
           end
         end
       end

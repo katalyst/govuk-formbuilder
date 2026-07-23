@@ -177,6 +177,33 @@ RSpec.describe "govuk_image_field" do
     end
   end
 
+  context "with an attached image whose bytes are missing" do
+    # Bytes can vanish from under a persisted, attached blob — an
+    # out-of-band purge, storage loss, or a lagging mirror. The reference
+    # is still valid and must round-trip; only the thumbnail is
+    # unavailable, so the preview degrades rather than failing the render.
+    # (A blob that was never uploaded can't reach the render this way:
+    # assigning it identifies it, which downloads a chunk and raises in
+    # the controller.)
+    let(:object) { create(:profile) }
+    let(:blob) { object.avatar.blob }
+
+    before { blob.service.delete(blob.key) }
+
+    it "renders the figure" do
+      expect(html).to have_css("figure.govuk-attachment .filename", text: "avatar.png")
+    end
+
+    it "omits the preview image" do
+      expect(html).to have_no_css("figure.govuk-attachment img")
+    end
+
+    it "keeps the blob's signed id as the keep option" do
+      expect(html.find("figure.govuk-attachment select option[selected]", visible: :all).value)
+        .to eq(blob.signed_id)
+    end
+  end
+
   context "with a non-image attachment" do
     let(:object) do
       create(:profile).tap do |profile|

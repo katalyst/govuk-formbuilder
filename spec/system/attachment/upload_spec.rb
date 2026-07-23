@@ -86,8 +86,8 @@ RSpec.describe "Async file upload", :aggregate_failures do
     figure = gallery_field.find("figure.govuk-attachment[data-state=upload-failed]", wait: 10)
 
     # A friendly message, not DirectUpload's raw error/alert.
-    expect(figure.text).to match(/Upload failed/)
-    expect(figure.text).not_to match(/Error/)
+    expect(figure.text).to include("Upload failed")
+    expect(figure.text).not_to include("Error")
     expect(page.evaluate_script("window.alertCalls")).to eq([])
 
     # The user can recover from the error
