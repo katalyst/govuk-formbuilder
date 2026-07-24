@@ -59,8 +59,10 @@ export default class AttachmentController extends Controller {
   async performUpload(file) {
     this.uploader = new AttachmentUploadController(this.input, file);
 
-    // Update element state
+    // Update element state, clearing any earlier failure
     this.element.dataset.state = "uploading";
+    this.statusText = "";
+    this.retryButton?.remove();
     const progressTag = createProgressTag(this.captionTag?.id);
     this.captionTag.appendChild(progressTag);
     this.input.addEventListener("direct-upload:progress", this.progress);
@@ -72,7 +74,8 @@ export default class AttachmentController extends Controller {
     } catch (error) {
       console.warn(error);
       this.element.dataset.state = "upload-failed";
-      this.statusText = "Upload failed";
+      this.statusText = "Upload failed — try again";
+      this.actionsTag?.prepend(createRetryButton(file.name));
     } finally {
       this.input.removeEventListener("direct-upload:progress", this.progress);
       progressTag.remove();
@@ -89,6 +92,10 @@ export default class AttachmentController extends Controller {
   change = () => {
     if (this.select.value === "") this.destroy();
   };
+
+  retry() {
+    this.performUpload(this.directUpload.file);
+  }
 
   progress = ({ detail }) => {
     if (detail.id !== this.id) return;
@@ -150,6 +157,13 @@ export default class AttachmentController extends Controller {
     return this.element.querySelector("figcaption");
   }
 
+  /**
+   * @returns {HTMLElement} the figure's actions container, or null
+   */
+  get actionsTag() {
+    return this.element.querySelector(".actions");
+  }
+
   get select() {
     return this.element.querySelector("select");
   }
@@ -170,6 +184,10 @@ export default class AttachmentController extends Controller {
 
   get progressTag() {
     return this.element.querySelector("progress");
+  }
+
+  get retryButton() {
+    return this.element.querySelector(".actions button.retry");
   }
 }
 
@@ -228,6 +246,16 @@ function humanSize(bytes) {
   const value = Number((bytes / 1024 ** exp).toPrecision(3));
 
   return `${value} ${UNITS[exp]}`;
+}
+
+function createRetryButton(filename, brand = "govuk") {
+  const button = document.createElement("BUTTON");
+  button.type = "button";
+  button.className = "retry";
+  button.textContent = "Try again";
+  button.setAttribute("aria-label", `Try again ${filename}`);
+  button.dataset.action = `${brand}-attachment#retry`;
+  return button;
 }
 
 function createProgressTag(labelId, brand = "govuk") {

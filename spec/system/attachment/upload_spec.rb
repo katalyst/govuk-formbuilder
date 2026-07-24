@@ -90,13 +90,58 @@ RSpec.describe "Async file upload", :aggregate_failures do
     expect(figure.text).not_to include("Error")
     expect(page.evaluate_script("window.alertCalls")).to eq([])
 
-    # The user can recover from the error
+    # The user can recover from the error: remove, or retry the upload with
+    # the file the figure still holds.
     expect(figure).to have_css("button[aria-label*='Remove']")
+    expect(figure).to have_css("button[type=button][aria-label='Try again avatar.png']", text: "Try again")
 
     click_button "Continue"
 
     # Submitting without clearing the error does not save the file
     expect(page).to have_current_path(profile_path(profile))
     expect(profile.reload.gallery).not_to be_attached
+  end
+
+  it "retries a failed upload with the file the figure holds" do
+    block_direct_uploads
+    visit edit_profile_path(profile)
+
+    choose_gallery_file("avatar.png")
+    release_direct_uploads(:internal_server_error)
+
+    figure = gallery_field.find("figure.govuk-attachment[data-state=upload-failed]", wait: 10)
+
+    click_button "Try again"
+
+    # Retry re-enters the standard uploading lifecycle; the retry control
+    # leaves with the failed state.
+    expect(gallery_field).to have_css("figure.govuk-attachment[data-state=uploading] progress")
+    expect(figure).to have_no_button("Try again")
+
+    release_direct_uploads(:ok)
+
+    expect(gallery_field).to have_css("figure.govuk-attachment[data-state=upload-successful]", wait: 10)
+
+    signed_id = gallery_field.find(
+      "figure.govuk-attachment select[name='profile[gallery][]'] option:first-of-type",
+      visible: :all,
+    ).value
+    expect(ActiveStorage::Blob.find_signed(signed_id)&.filename&.to_s).to eq("avatar.png")
+  end
+
+  it "offers a single retry control however many attempts fail" do
+    block_direct_uploads
+    visit edit_profile_path(profile)
+
+    choose_gallery_file("avatar.png")
+    release_direct_uploads(:internal_server_error)
+
+    gallery_field.find("figure.govuk-attachment[data-state=upload-failed]", wait: 10)
+
+    click_button "Try again"
+    release_direct_uploads(:internal_server_error)
+
+    expect(gallery_field).to have_css("figure.govuk-attachment[data-state=upload-failed]", wait: 10)
+    expect(gallery_field).to have_css("button[type=button][aria-label='Try again avatar.png']", count: 1)
   end
 end
