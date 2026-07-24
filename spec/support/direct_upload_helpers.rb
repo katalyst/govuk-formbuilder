@@ -8,7 +8,10 @@
 # Including this module restores the default form builder after each example.
 module DirectUploadHelpers
   def self.included(base)
-    base.after { ApplicationController.default_form_builder(GOVUKDesignSystemFormBuilder::FormBuilder) }
+    base.after do
+      BlockingDirectUploadsController.release_held
+      ApplicationController.default_form_builder(GOVUKDesignSystemFormBuilder::FormBuilder)
+    end
   end
 
   # Points direct uploads at a route that holds each request until released,

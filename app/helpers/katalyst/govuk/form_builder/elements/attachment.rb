@@ -18,6 +18,7 @@ module Katalyst
           def options
             super.merge(
               "data-direct-upload-url" => @direct_upload_url,
+              include_hidden: false, # we always render remove_field
               multiple: many?,
             )
           end
@@ -25,13 +26,20 @@ module Katalyst
           private
 
           def file
-            safe_join([attachment, @builder.file_field(@attribute_name, attributes(@html_attributes))])
+            safe_join([remove_field, attachment, @builder.file_field(@attribute_name, attributes(@html_attributes))])
           end
 
           def file_with_javascript_markup
             tag.div(class: "#{brand}-file-upload-wrapper", data: { controller: "#{brand}-file-upload" }, **i18n_data) do
               file
             end
+          end
+
+          # A removed figure takes its select with it and an empty file input contributes
+          # no value. This input ensures that there's always a value to process so that
+          # attachments can be removed (both one? and many? cases).
+          def remove_field
+            tag.input(name: @builder.field_name(@attribute_name, multiple: many?), type: "hidden", value: "")
           end
         end
       end

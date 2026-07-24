@@ -119,6 +119,18 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         )
       end
 
+      it "inputs a hidden input to track removes" do
+        expect(html).to have_css(".govuk-file-upload-wrapper input[type=hidden]", count: 1, visible: :all)
+      end
+
+      it "renders the blank keeper first, before the other input(s)" do
+        types = html.all("[name='profile[avatar]']", visible: :all).map do |node|
+          "#{node.tag_name}[type=#{node['type']}]"
+        end
+
+        expect(types).to eq(%w[input[type=hidden] select[type=] input[type=file]])
+      end
+
       it "names the select for scalar assignment" do
         select = html.find("figure.govuk-attachment select", visible: :all)
 
@@ -468,6 +480,14 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         ids = html.all("figure.govuk-attachment select", visible: :all).map { |select| select["id"] }
 
         expect(ids).to eq(profile.gallery.blobs.map { |blob| builder.field_id(:gallery, :attachment, blob.id, :input) })
+      end
+
+      it "renders the blank keeper first, before the other input(s)" do
+        types = html.all("[name='profile[gallery][]']", visible: :all).map do |node|
+          "#{node.tag_name}[type=#{node['type']}]"
+        end
+
+        expect(types).to eq(%w[input[type=hidden] select[type=] select[type=] input[type=file]])
       end
     end
   end

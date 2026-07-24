@@ -8,6 +8,9 @@ require "rails_helper"
 #   * each figure offers a remove control named after its file
 #   * removing deletes the figure from the DOM so its signed id no longer
 #     submits; Rails' auto-blank still clears an emptied has_many
+#   * removing a has_one's figure still submits the detach — removing with
+#     JavaScript equals choosing the remove option without it, so a required
+#     attachment surfaces its presence error instead of silently surviving
 #   * focus moves to the next figure's control, else the previous one's,
 #     else the field's upload button — never lost to <body>
 #   * removal is announced through the field's announcements region, naming
@@ -68,6 +71,36 @@ RSpec.describe "Removing an attachment", :aggregate_failures do
 
     expect(page).to have_current_path(profile_path(profile))
     expect(profile.reload.gallery).not_to be_attached
+  end
+
+  it "detaches a removed has_one on submit, surfacing the required error" do
+    visit edit_profile_path(profile)
+
+    click_button "Remove avatar.png"
+
+    expect(avatar_field).to have_no_css(".govuk-attachment")
+
+    click_button "Continue"
+
+    expect(page).to have_css(".govuk-error-summary a", text: /blank/i)
+    expect(page).to have_css(
+      ".govuk-form-group--error:has(input[name='profile[avatar]']) p.govuk-error-message",
+      text: /blank/i,
+    )
+  end
+
+  it "detaches a removed optional has_one on submit" do
+    profile.cv.attach(io: File.open(file_fixture("cv.pdf")), filename: "cv.pdf", content_type: "application/pdf")
+    visit edit_profile_path(profile)
+
+    click_button "Remove cv.pdf"
+
+    expect(cv_field).to have_no_css(".govuk-attachment")
+
+    click_button "Continue"
+
+    expect(page).to have_current_path(profile_path(profile))
+    expect(profile.reload.cv).not_to be_attached
   end
 
   it "moves focus to the next figure's control, then falls back to the file input" do

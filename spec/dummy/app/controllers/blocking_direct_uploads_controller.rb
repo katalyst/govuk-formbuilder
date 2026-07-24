@@ -13,6 +13,13 @@ class BlockingDirectUploadsController < ActiveStorage::DirectUploadsController
     QUEUE << result
   end
 
+  # Fails every request currently held, for teardown: a test that navigates
+  # away mid-upload leaves its request blocked, and session reset would
+  # otherwise wait out the hold's full timeout.
+  def self.release_held
+    QUEUE.num_waiting.times { release(:gone) }
+  end
+
   def create
     result = QUEUE.pop(timeout: 5)
 

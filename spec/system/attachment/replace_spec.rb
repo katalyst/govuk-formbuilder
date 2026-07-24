@@ -12,6 +12,7 @@ require "rails_helper"
 # is free.
 RSpec.describe "Replacing an attachment", :aggregate_failures do
   include AttachmentFieldHelpers
+  include DirectUploadHelpers
 
   let(:profile) do
     create(:profile).tap do |p|
@@ -53,6 +54,38 @@ RSpec.describe "Replacing an attachment", :aggregate_failures do
 
     expect(page).to have_current_path(profile_path(profile))
     expect(profile.reload.avatar.filename.to_s).to eq("avatar.png")
+  end
+
+  it "clears optional inputs when a replacement is submitted during upload" do
+    profile.cv.attach(io: File.open(file_fixture("cv.pdf")), filename: "cv.pdf", content_type: "application/pdf")
+    block_direct_uploads
+    visit edit_profile_path(profile)
+
+    choose_cv_file("cv.pdf")
+
+    expect(cv_field).to have_css("figure.govuk-attachment[data-state=uploading]")
+
+    click_button "Continue"
+
+    expect(page).to have_current_path(profile_path(profile))
+    expect(profile.reload.cv).not_to be_attached
+  end
+
+  it "keeps stored files with errors when a replacement is submitted during upload" do
+    block_direct_uploads
+    visit edit_profile_path(profile)
+
+    choose_avatar_file("avatar.png")
+
+    expect(avatar_field).to have_css("figure.govuk-attachment[data-state=uploading]")
+
+    click_button "Continue"
+
+    expect(page).to have_css(
+      ".govuk-form-group--error:has(input[name='profile[avatar]']) p.govuk-error-message",
+      text: /blank/i,
+    )
+    expect(profile.reload.avatar.filename.to_s).to eq("old-avatar.png")
   end
 
   it "reverts to the original when the replacement is removed" do
