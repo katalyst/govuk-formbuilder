@@ -209,8 +209,8 @@ export function createAttachment(input, file, i18n) {
 
   template.innerHTML = `
     <figure class="${config.brand}-attachment" data-controller="govuk-attachment" aria-labelledby="attachment-${id}-caption">
-      <img alt="" src="">
-      <figcaption id="attachment-${id}-caption" aria-atomic="true" aria-live="polite">
+      <img alt="" class="preview" src="">
+      <figcaption id="attachment-${id}-caption" class="caption" aria-atomic="true" aria-live="polite">
         <span class="filename"></span>
         <span class="size"></span>
         <span class="status"></span>

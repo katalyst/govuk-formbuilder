@@ -1,27 +1,66 @@
 @use "govuk-frontend/dist/govuk/base";
 
+$attachment-background-colour: base.govuk-colour("black", $variant: "tint-95");
+$attachment-border-width: 2px;
+
 @mixin styles {
   :where(.govuk-attachment) {
     display: grid;
     grid-template-areas: "preview caption actions";
+    grid-template-columns: auto 1fr auto;
+    margin: 0;
+    padding: base.govuk-spacing(3) base.govuk-spacing(3);
+    grid-gap: base.govuk-spacing(2);
+    background-color: $attachment-background-colour;
+    border: $attachment-border-width solid
+      base.govuk-functional-colour("border");
 
     .preview {
       grid-area: preview;
+      max-width: 4rem;
+      aspect-ratio: 1/1;
     }
 
     .caption {
+      display: flex;
+      flex-direction: column;
       grid-area: caption;
+    }
+
+    .filename {
+      @include base.govuk-typography-weight-bold;
+    }
+
+    .size {
+      color: base.govuk-functional-colour(secondary-text);
     }
 
     .actions {
       grid-area: actions;
     }
 
-    // The remove button requires JavaScript; without it the select is the
-    // visible control.
+    // Buttons require JavaScript
     .actions button {
       display: none;
     }
+
+    &[data-state="upload-successful"] {
+      .status {
+        color: base.govuk-functional-colour("success");
+      }
+    }
+
+    &[data-state="upload-failed"] {
+      border-color: base.govuk-functional-colour("error");
+
+      .status {
+        color: base.govuk-functional-colour("error");
+      }
+    }
+  }
+
+  .govuk-attachment {
+    margin-bottom: base.govuk-spacing(2);
   }
 
   // With JavaScript running the button is the figure's only interactive

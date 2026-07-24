@@ -152,7 +152,7 @@ module Katalyst
             return if url.nil?
 
             # Setting alt to "" as the details already describe the attachment, equivalent to role="presentation"
-            @builder.image_tag(url, alt: "")
+            @builder.image_tag(url, alt: "", class: "preview")
           end
 
           # The caption is a polite atomic live region: JS writes upload status
@@ -161,7 +161,9 @@ module Katalyst
           # @param [ActiveStorage::Blob] blob
           # @return [ActiveSupport::SafeBuffer,nil]
           def attachment_caption_for(blob)
-            tag.figcaption(id: attachment_id_for(blob, :caption), aria: { atomic: true, live: "polite" }) do
+            tag.figcaption(id:    attachment_id_for(blob, :caption),
+                           class: "caption",
+                           aria:  { atomic: true, live: "polite" }) do
               safe_join([
                           tag.span(blob.filename, class: "filename"),
                           " ",
