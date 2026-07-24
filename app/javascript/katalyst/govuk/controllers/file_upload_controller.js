@@ -1,7 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 import { I18n } from "govuk-frontend/dist/govuk/i18n.mjs";
-import { FileUpload } from "govuk-frontend/dist/govuk/all.mjs";
+import { closestAttributeValue } from "govuk-frontend/dist/govuk/common/closest-attribute-value.mjs";
 import { createAttachment } from "./attachment_controller";
+import config, { attachmentConfig } from "../config";
 
 export default class FileUploadController extends Controller {
   connect() {
@@ -9,7 +10,10 @@ export default class FileUploadController extends Controller {
       throw new Error(`Missing file input for ${this.element}`);
     }
 
-    this.i18n = new I18n(FileUpload.defaults.i18n, { locale: "en" });
+    this.config = attachmentConfig(this.element);
+    this.i18n = new I18n(this.config.i18n, {
+      locale: closestAttributeValue(this.element, "lang"),
+    });
     this.id = this.uploadButton?.id ?? this.fileInput.id;
 
     // dragenter/dragleave are on the document so we can tell a move between
@@ -122,7 +126,7 @@ export default class FileUploadController extends Controller {
 
     this.uploadButton.disabled = disabled;
     this.element.classList.toggle(
-      "govuk-file-upload-wrapper--disabled",
+      `${config.brand}-file-upload-wrapper--disabled`,
       disabled,
     );
   }
@@ -194,11 +198,15 @@ export default class FileUploadController extends Controller {
   }
 
   showDraggingState() {
-    this.uploadButton.classList.add("govuk-file-upload-button--dragging");
+    this.uploadButton.classList.add(
+      `${config.brand}-file-upload-button--dragging`,
+    );
   }
 
   hideDraggingState() {
-    this.uploadButton.classList.remove("govuk-file-upload-button--dragging");
+    this.uploadButton.classList.remove(
+      `${config.brand}-file-upload-button--dragging`,
+    );
   }
 
   announce(message) {
@@ -206,7 +214,9 @@ export default class FileUploadController extends Controller {
   }
 
   get announcements() {
-    return this.element.querySelector(".govuk-file-upload-announcements");
+    return this.element.querySelector(
+      `.${config.brand}-file-upload-announcements`,
+    );
   }
 
   // Whether a drop of this many files is allowed: any for a multiple input,
@@ -252,7 +262,7 @@ export default class FileUploadController extends Controller {
     files.forEach((file) => {
       if (figures.some((figure) => figure.file === file)) return;
 
-      const attachment = createAttachment(this.fileInput, file);
+      const attachment = createAttachment(this.fileInput, file, this.i18n);
       this.uploadButton.insertAdjacentElement("beforebegin", attachment);
     });
 
@@ -293,7 +303,7 @@ export default class FileUploadController extends Controller {
     // The removal is an event, so it is announced through the assertive
     // announcements region; the polite status region only ever carries
     // state (the count), which updates in place.
-    this.announce(`${name} removed`);
+    this.announce(this.i18n.t("fileRemoved", { filename: name }));
     this.updateCount();
   };
 
@@ -302,10 +312,14 @@ export default class FileUploadController extends Controller {
 
     if (count === 0) {
       this.statusTag.innerText = this.i18n.t("noFileChosen");
-      this.uploadButton.classList.add("govuk-file-upload-button--empty");
+      this.uploadButton.classList.add(
+        `${config.brand}-file-upload-button--empty`,
+      );
     } else {
       this.statusTag.innerText = this.i18n.t("multipleFilesChosen", { count });
-      this.uploadButton.classList.remove("govuk-file-upload-button--empty");
+      this.uploadButton.classList.remove(
+        `${config.brand}-file-upload-button--empty`,
+      );
     }
   }
 
@@ -321,7 +335,7 @@ export default class FileUploadController extends Controller {
 
   get isDragging() {
     return this.uploadButton.classList.contains(
-      "govuk-file-upload-button--dragging",
+      `${config.brand}-file-upload-button--dragging`,
     );
   }
 
@@ -354,14 +368,15 @@ function countFileItems(items) {
 // A visually-hidden assertive live region for event announcements (drag
 // enter/leave, removals), kept separate from the polite status region that
 // carries the file count.
-function createAnnouncements(brand = "govuk") {
+function createAnnouncements() {
   const region = document.createElement("span");
-  region.className = `${brand}-file-upload-announcements ${brand}-visually-hidden`;
+  region.className = `${config.brand}-file-upload-announcements ${config.brand}-visually-hidden`;
   region.setAttribute("aria-live", "assertive");
   return region;
 }
 
-function createUploadButton(id, i18n, fileInput, brand = "govuk") {
+function createUploadButton(id, i18n, fileInput) {
+  const brand = config.brand;
   const template = document.createElement("TEMPLATE");
   template.innerHTML = `
     <button
@@ -377,7 +392,7 @@ function createUploadButton(id, i18n, fileInput, brand = "govuk") {
         <span class="${brand}-button
                      ${brand}-button--secondary
                      ${brand}-file-upload-button__pseudo-button">${i18n.t("chooseFilesButton")}</span>
-        <span class="${brand}-body govuk-file-upload-button__instruction">${i18n.t("dropInstruction")}</span>
+        <span class="${brand}-body ${brand}-file-upload-button__instruction">${i18n.t("dropInstruction")}</span>
       </span>
     </button>
   `;

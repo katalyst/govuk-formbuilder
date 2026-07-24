@@ -114,7 +114,9 @@ function observe(body) {
 // the <body> element itself, so a Turbo replace render — which swaps in a
 // new body and re-executes the snippet — disposes and recreates them, while
 // a morph retains the body and the observers with it.
-function init() {
+function init(options = {}) {
+  if (options.brand) config.brand = options.brand;
+
   const body = document.body;
 
   if (body.__govukFormbuilderInit) return;
@@ -127,6 +129,7 @@ function init() {
 
 // stimulus controllers
 import controllers from "./controllers";
+import config from "./config";
 
 export {
   controllers as default,

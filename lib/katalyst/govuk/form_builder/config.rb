@@ -27,6 +27,16 @@ module Katalyst
 
           config.image_mime_types = %w[image/png image/gif image/jpeg image/webp].freeze
 
+          def attachment_preview_representation
+            config.attachment_preview_representation
+          end
+
+          def attachment_preview_representation=(value)
+            config.attachment_preview_representation = value
+          end
+
+          config.attachment_preview_representation = { resize_and_pad: [100, 100, { crop: :centre }] }.freeze
+
           def use_legacy_file_fields?
             config.use_legacy_file_fields
           end

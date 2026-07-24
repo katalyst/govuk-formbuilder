@@ -1,5 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 import { DirectUploadController } from "@rails/activestorage";
+import { I18n } from "govuk-frontend/dist/govuk/i18n.mjs";
+import { closestAttributeValue } from "govuk-frontend/dist/govuk/common/closest-attribute-value.mjs";
+import config, { attachmentConfig } from "../config";
 
 class AttachmentUploadController extends DirectUploadController {
   async start(option) {
@@ -22,6 +25,13 @@ class AttachmentUploadController extends DirectUploadController {
 
 export default class AttachmentController extends Controller {
   connect() {
+    this.config = attachmentConfig(
+      this.element.closest(`.${config.brand}-file-upload-wrapper`),
+    );
+    this.i18n = new I18n(this.config.i18n, {
+      locale: closestAttributeValue(this.element, "lang"),
+    });
+
     this.select.addEventListener("change", this.change);
     this.previewPendingFile();
     this.uploadPendingFile();
@@ -70,12 +80,12 @@ export default class AttachmentController extends Controller {
     try {
       await this.uploader.start(this.inputOption);
       this.element.dataset.state = "upload-successful";
-      this.statusText = "Uploaded successfully";
+      this.statusText = this.i18n.t("uploadSucceeded");
     } catch (error) {
       console.warn(error);
       this.element.dataset.state = "upload-failed";
-      this.statusText = "Upload failed — try again";
-      this.actionsTag?.prepend(createRetryButton(file.name));
+      this.statusText = this.i18n.t("uploadFailed");
+      this.actionsTag?.prepend(createRetryButton(file.name, this.i18n));
     } finally {
       this.input.removeEventListener("direct-upload:progress", this.progress);
       progressTag.remove();
@@ -134,13 +144,13 @@ export default class AttachmentController extends Controller {
 
   get input() {
     return this.element
-      .closest(".govuk-file-upload-wrapper")
+      .closest(`.${config.brand}-file-upload-wrapper`)
       ?.querySelector("input[type=file]");
   }
 
   get uploadButton() {
     return this.element
-      .closest(".govuk-file-upload-wrapper")
+      .closest(`.${config.brand}-file-upload-wrapper`)
       ?.querySelector("[type='button']:has(+ input[type='file'])");
   }
 
@@ -193,12 +203,12 @@ export default class AttachmentController extends Controller {
 
 let nextAttachmentId = 0;
 
-export function createAttachment(input, file, brand = "govuk") {
+export function createAttachment(input, file, i18n) {
   const template = document.createElement("TEMPLATE");
   const id = ++nextAttachmentId;
 
   template.innerHTML = `
-    <figure class="${brand}-attachment" data-controller="${brand}-attachment" aria-labelledby="attachment-${id}-caption">
+    <figure class="${config.brand}-attachment" data-controller="govuk-attachment" aria-labelledby="attachment-${id}-caption">
       <img alt="" src="">
       <figcaption id="attachment-${id}-caption" aria-atomic="true" aria-live="polite">
         <span class="filename"></span>
@@ -210,7 +220,7 @@ export function createAttachment(input, file, brand = "govuk") {
           <option selected="selected" value=""></option>
           <option value=""></option>
         </select>
-        <button type="button" data-action="${brand}-attachment#destroy">&times;</button>
+        <button type="button" data-action="govuk-attachment#destroy"></button>
       </div>
     </figure>
   `;
@@ -222,11 +232,14 @@ export function createAttachment(input, file, brand = "govuk") {
 
   const [keep, remove] = figure.querySelectorAll("option");
   keep.textContent = file.name;
-  remove.textContent = `Remove ${file.name}`;
+  remove.textContent = i18n.t("removeButton", { filename: file.name });
 
-  figure
-    .querySelector("button")
-    .setAttribute("aria-label", `Remove ${file.name}`);
+  const removeButton = figure.querySelector("button");
+  removeButton.textContent = i18n.t("removeButtonContent");
+  removeButton.setAttribute(
+    "aria-label",
+    i18n.t("removeButton", { filename: file.name }),
+  );
 
   // The figure carries its File until an attachment controller connects and
   // claims it for upload; while it remains, the file is still in the input's
@@ -248,19 +261,19 @@ function humanSize(bytes) {
   return `${value} ${UNITS[exp]}`;
 }
 
-function createRetryButton(filename, brand = "govuk") {
+function createRetryButton(filename, i18n) {
   const button = document.createElement("BUTTON");
   button.type = "button";
   button.className = "retry";
-  button.textContent = "Try again";
-  button.setAttribute("aria-label", `Try again ${filename}`);
-  button.dataset.action = `${brand}-attachment#retry`;
+  button.textContent = i18n.t("retryButton");
+  button.setAttribute("aria-label", `${i18n.t("retryButton")} ${filename}`);
+  button.dataset.action = "govuk-attachment#retry";
   return button;
 }
 
-function createProgressTag(labelId, brand = "govuk") {
+function createProgressTag(labelId) {
   const progress = document.createElement("PROGRESS");
-  progress.className = `${brand}-attachment-progress`;
+  progress.className = `${config.brand}-attachment-progress`;
   if (labelId) progress.setAttribute("aria-labelledby", labelId);
   progress.value = 0;
   progress.max = 100;

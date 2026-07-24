@@ -14,7 +14,7 @@ module Katalyst
           tag.script type: "module", nonce: request.content_security_policy_nonce do
             <<~JS.html_safe
               import {init} from "@katalyst/govuk-formbuilder";
-              init();
+              init({brand: #{GOVUKDesignSystemFormBuilder.brand.to_json}});
             JS
           end
         end

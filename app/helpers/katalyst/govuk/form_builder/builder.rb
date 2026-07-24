@@ -296,6 +296,20 @@ module Katalyst
         # @param left_drop_zone_text [String] The text announced by assistive technology when user drags files and
         #   leaves the drop zone without dropping. Default is "Left drop zone". If javascript is not provided, this
         #   option will be ignored.
+        # @param upload_succeeded_text [String] The status shown in a figure's caption when its direct upload
+        #   completes. Default is "Uploaded successfully". If javascript is not provided, this option will be ignored.
+        # @param upload_failed_text [String] The status shown in a figure's caption when its direct upload fails.
+        #   Default is "Upload failed — try again". If javascript is not provided, this option will be ignored.
+        # @param retry_button_text [String] The label of the retry control offered on a failed upload. Default is
+        #   "Try again". If javascript is not provided, this option will be ignored.
+        # @param file_removed_text [String] The text announced by assistive technology when a figure is removed. The
+        #   component will replace the %{filename} placeholder with the removed file's name. Default is
+        #   "%{filename} removed". If javascript is not provided, this option will be ignored.
+        # @param remove_button_text [String] The accessible name of each figure's remove control and the text of its
+        #   no-JavaScript remove option. The component will replace the %{filename} placeholder with the figure's
+        #   file name. Default is "Remove %{filename}".
+        # @param remove_button_content_text [String] The visible content of each figure's remove button. Default is
+        #   "×".
         # @param & [Block] arbitrary HTML that will be rendered between the hint and the input
         #
         # @example A photo upload field with file type specifier and injected content
@@ -326,6 +340,12 @@ module Katalyst
           no_file_chosen_text: nil,
           entered_drop_zone_text: nil,
           left_drop_zone_text: nil,
+          upload_succeeded_text: nil,
+          upload_failed_text: nil,
+          retry_button_text: nil,
+          file_removed_text: nil,
+          remove_button_text: nil,
+          remove_button_content_text: nil,
           direct_upload: true,
           direct_upload_url: (self.direct_upload_url if direct_upload),
           **,
@@ -350,6 +370,12 @@ module Katalyst
             no_file_chosen_text:,
             entered_drop_zone_text:,
             left_drop_zone_text:,
+            upload_succeeded_text:,
+            upload_failed_text:,
+            retry_button_text:,
+            file_removed_text:,
+            remove_button_text:,
+            remove_button_content_text:,
             **,
             &
           ).html

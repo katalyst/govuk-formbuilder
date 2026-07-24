@@ -12,6 +12,17 @@ module Katalyst
 
           include ActionView::Helpers::NumberHelper
 
+          # The attachment strings' canonical home (config/locales).
+          I18N_SCOPE = %i[katalyst govuk attachment].freeze
+
+          # The gem's own en strings, read straight from its locale file:
+          # resolving them through I18n would absorb a host app's en
+          # overrides, and this table is the baseline those overrides are
+          # detected against.
+          BUNDLED_DEFAULTS = YAML.load_file(
+            Engine.root.join("config/locales/en.yml"),
+          ).dig("en", *I18N_SCOPE.map(&:to_s)).freeze
+
           def attachment?
             value.is_a?(ActiveStorage::Attached)
           end
@@ -47,7 +58,7 @@ module Katalyst
           def attachment_for(blob)
             tag.figure(class: "#{brand}-attachment",
                        aria:  { labelledby: attachment_id_for(blob, :caption) },
-                       data:  { controller: "#{brand}-attachment" }) do
+                       data:  { controller: "govuk-attachment" }) do
               safe_join([
                           attachment_preview_for(blob),
                           attachment_caption_for(blob),
@@ -77,7 +88,7 @@ module Katalyst
             @builder.select(
               @attribute_name,
               [[blob.filename.to_s, blob.signed_id],
-               ["Remove #{blob.filename}", ""]],
+               [remove_button_label(blob), ""]],
               { selected: blob.signed_id },
               id:   attachment_id_for(blob, :input),
               name: @builder.field_name(@attribute_name, multiple: many?),
@@ -89,10 +100,40 @@ module Katalyst
           # @param [ActiveStorage::Blob] blob
           # @return [ActiveSupport::SafeBuffer,nil]
           def attachment_remove_for(blob)
-            tag.button("&times;".html_safe,
+            tag.button(remove_button_content,
                        type: "button",
-                       aria: { label: "Remove #{blob.filename}" },
-                       data: { action: "#{brand}-attachment#destroy" })
+                       aria: { label: remove_button_label(blob) },
+                       data: { action: "govuk-attachment#destroy" })
+          end
+
+          # The remove strings render here and in the JS figure template, so
+          # both draw from the same options (or matching defaults) — the two
+          # figure sources must stay string-identical.
+          # @param [ActiveStorage::Blob] blob
+          # @return [String]
+          def remove_button_label(blob)
+            if @remove_button_text
+              # %{filename} is the option placeholder (govuk-frontend's i18n
+              # convention), substituted directly — not a Ruby format token.
+              # rubocop:disable Style/FormatStringToken
+              @remove_button_text.gsub("%{filename}", blob.filename.to_s)
+              # rubocop:enable Style/FormatStringToken
+            else
+              attachment_translation(:remove_button, filename: blob.filename.to_s)
+            end
+          end
+
+          # @return [String]
+          def remove_button_content
+            @remove_button_content_text || attachment_translation(:remove_button_content)
+          end
+
+          # The current locale's translation, falling back to the gem's en
+          # defaults rather than a "translation missing" marker.
+          # @return [String]
+          def attachment_translation(key, **)
+            I18n.t(key, scope: I18N_SCOPE, default: nil, **) ||
+              I18n.t(key, scope: I18N_SCOPE, locale: :en, **)
           end
 
           # The representation is rendered lazily: the variant is processed
@@ -105,7 +146,9 @@ module Katalyst
           def attachment_preview_for(blob)
             return unless blob.representable?
 
-            url = @builder.attachment_preview_url(blob.representation(resize_and_pad: [100, 100, { crop: :centre }]))
+            url = @builder.attachment_preview_url(
+              blob.representation(config.attachment_preview_representation),
+            )
             return if url.nil?
 
             # Setting alt to "" as the details already describe the attachment, equivalent to role="presentation"

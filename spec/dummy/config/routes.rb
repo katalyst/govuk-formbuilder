@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # its own request: a lazy GET to render it and a POST to round-trip it.
   match "guide/:page/:example", to: "examples#show", as: :example,
                                 via: %i[get post],
-                                constraints: { page: /[a-z_]+/, example: /[a-z_]+/ }
+                                constraints: { page: /[a-z_]+/, example: /[a-z0-9_]+/ }
 
   # System tests point fields here to hold direct uploads until released.
   post "blocking_direct_uploads", to: "blocking_direct_uploads#create"

@@ -1,0 +1,28 @@
+<%# locals: (profile:) %>
+<%#
+  Test-support form for the attachment field's i18n text options
+  (spec/system/attachment/i18n_spec.rb). Every option is a sentinel value,
+  so an assertion that passes cannot have been met by the enhancement's
+  bundled English defaults.
+%>
+<%= turbo_frame_tag example_frame_id(params[:page], params[:example]) do %>
+  <%= form_with(model: profile, url: example_path(params[:page], params[:example])) do |f| %>
+    <%= f.govuk_attachment_field :gallery,
+          label: { text: "Gallery" },
+          choose_files_button_text: "XX pick files XX",
+          drop_instruction_text: "XX or drop XX",
+          no_file_chosen_text: "XX empty XX",
+          multiple_files_chosen_one_text: "XX one file: %{count} XX",
+          multiple_files_chosen_other_text: "XX many files: %{count} XX",
+          entered_drop_zone_text: "XX over zone XX",
+          left_drop_zone_text: "XX out of zone XX",
+          upload_succeeded_text: "XX stored XX",
+          upload_failed_text: "XX broken XX",
+          retry_button_text: "XX retry XX",
+          file_removed_text: "XX %{filename} gone XX",
+          remove_button_text: "XX bin %{filename} XX",
+          remove_button_content_text: "XX x XX" %>
+
+    <%= example_submit_buttons(f) %>
+  <% end %>
+<% end %>

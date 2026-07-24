@@ -1,0 +1,16 @@
+# The attachment field's string defaults — the canonical vocabulary.
+# The JS bundle carries a mirror of this table as its offline defaults
+# (app/javascript/katalyst/govuk/config.js); keep the two in step.
+# Strings that differ from these defaults — a translation, or a host
+# app's override in any locale, en included — render onto the field's
+# data-i18n.* attributes, where the JS enhancement reads them.
+en:
+  katalyst:
+    govuk:
+      attachment:
+        upload_succeeded: "Uploaded successfully"
+        upload_failed: "Upload failed — try again"
+        retry_button: "Try again"
+        file_removed: "%{filename} removed"
+        remove_button: "Remove %{filename}"
+        remove_button_content: "×"

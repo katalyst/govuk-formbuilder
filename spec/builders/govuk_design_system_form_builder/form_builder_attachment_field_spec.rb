@@ -86,6 +86,169 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
       end
     end
 
+    # Each text option renders as a data-i18n.* attribute on the wrapper.
+    # The attribute names are the contract's read surface — the JS
+    # enhancement configures its strings from these exact names, so a
+    # rename here breaks localisation without failing anything else.
+    context "with i18n text options" do
+      def wrapper(html)
+        html.find(".govuk-file-upload-wrapper", visible: :all)
+      end
+
+      {
+        choose_files_button_text:         "data-i18n.choose-files-button",
+        drop_instruction_text:            "data-i18n.drop-instruction",
+        no_file_chosen_text:              "data-i18n.no-file-chosen",
+        multiple_files_chosen_one_text:   "data-i18n.multiple-files-chosen.one",
+        multiple_files_chosen_other_text: "data-i18n.multiple-files-chosen.other",
+        entered_drop_zone_text:           "data-i18n.entered-drop-zone",
+        left_drop_zone_text:              "data-i18n.left-drop-zone",
+        upload_succeeded_text:            "data-i18n.upload-succeeded",
+        upload_failed_text:               "data-i18n.upload-failed",
+        retry_button_text:                "data-i18n.retry-button",
+        file_removed_text:                "data-i18n.file-removed",
+        remove_button_text:               "data-i18n.remove-button",
+        remove_button_content_text:       "data-i18n.remove-button-content",
+      }.each do |option, attribute|
+        it "renders #{option} as #{attribute}" do
+          html = govuk_attachment_field(:avatar, option => "Custom text")
+
+          expect(wrapper(html)[attribute]).to eq("Custom text")
+        end
+      end
+
+      # %{count} is govuk-frontend's interpolation placeholder, passed
+      # through verbatim — not a Ruby format token.
+      # rubocop:disable Style/FormatStringToken
+      it "renders the one form of a multiple_files_chosen_text hash" do
+        html = govuk_attachment_field(:avatar, multiple_files_chosen_text: { one: "1 file", other: "%{count} files" })
+
+        expect(wrapper(html)["data-i18n.multiple-files-chosen.one"]).to eq("1 file")
+      end
+
+      it "renders the other form of a multiple_files_chosen_text hash" do
+        html = govuk_attachment_field(:avatar, multiple_files_chosen_text: { one: "1 file", other: "%{count} files" })
+
+        expect(wrapper(html)["data-i18n.multiple-files-chosen.other"]).to eq("%{count} files")
+      end
+      # rubocop:enable Style/FormatStringToken
+
+      # With no options the attributes are absent, leaving the strings to
+      # the enhancement's own defaults.
+      it "renders no i18n data attributes by default" do
+        attributes = wrapper(html).native.attribute_nodes.map(&:name)
+
+        expect(attributes.grep(/\Adata-i18n/)).to be_empty
+      end
+    end
+
+    # The remove strings also render into the server figures, so the option
+    # must drive both the data attribute (for client figures) and the
+    # trait's own markup — string parity between the two figure sources
+    # depends on the shared option.
+    # rubocop:disable Style/FormatStringToken
+    context "with remove control options" do
+      subject(:html) do
+        govuk_attachment_field(:avatar, remove_button_text: "Bin %{filename}", remove_button_content_text: "🗑")
+      end
+
+      it "names the remove option with the interpolated text" do
+        expect(html).to have_css(
+          "figure.govuk-attachment select option[value='']",
+          text:    "Bin avatar.png",
+          visible: :all,
+        )
+      end
+
+      it "labels the remove button with the interpolated text" do
+        button = html.find("figure.govuk-attachment .actions button")
+
+        expect(button["aria-label"]).to eq("Bin avatar.png")
+      end
+
+      it "renders the configured remove button content" do
+        expect(html).to have_css("figure.govuk-attachment .actions button", text: "🗑")
+      end
+    end
+    # rubocop:enable Style/FormatStringToken
+
+    # The attachment strings live in the gem's locale files
+    # (config/locales), so a consuming app localises by adding Rails
+    # translations — no JS knowledge needed. A translated string renders
+    # into the server figures and onto the data-i18n.* attributes (where
+    # the JS reads it); the en defaults render neither, leaving the JS to
+    # its bundled mirror of the same table.
+    context "with a non-default locale" do
+      around do |example|
+        # rubocop:disable Style/FormatStringToken -- %{filename} is the i18n placeholder
+        I18n.backend.store_translations(:fr, { katalyst: { govuk: { attachment: {
+                                          upload_succeeded:      "Téléversement réussi",
+                                          remove_button:         "Supprimer %{filename}",
+                                          remove_button_content: "Retirer",
+                                        } } } })
+        # rubocop:enable Style/FormatStringToken
+        I18n.with_locale(:fr) { example.run }
+      ensure
+        I18n.backend.reload!
+      end
+
+      it "renders the translation onto the data-i18n attribute" do
+        wrapper = html.find(".govuk-file-upload-wrapper", visible: :all)
+
+        expect(wrapper["data-i18n.upload-succeeded"]).to eq("Téléversement réussi")
+      end
+
+      it "names the remove option from the translation" do
+        expect(html).to have_css(
+          "figure.govuk-attachment select option[value='']",
+          text:    "Supprimer avatar.png",
+          visible: :all,
+        )
+      end
+
+      it "renders the remove button content from the translation" do
+        expect(html).to have_css("figure.govuk-attachment .actions button", text: "Retirer")
+      end
+
+      it "prefers an explicit option over the translation" do
+        html    = govuk_attachment_field(:avatar, upload_succeeded_text: "Custom text")
+        wrapper = html.find(".govuk-file-upload-wrapper", visible: :all)
+
+        expect(wrapper["data-i18n.upload-succeeded"]).to eq("Custom text")
+      end
+    end
+
+    # Overriding the gem's en strings in the app's own locale files is the
+    # same customisation path as any other locale: the override must reach
+    # the data-i18n.* attributes, or server-rendered figures show the
+    # override while JS-created figures and announcements fall back to the
+    # gem's bundled defaults — a mixed UI.
+    context "with an app-level en override" do
+      around do |example|
+        # The backend loads locale files lazily on first lookup, clobbering
+        # anything stored beforehand — initialise it first so the override
+        # merges over the gem's en table, as an app's locale file would.
+        I18n.backend.translations(do_init: true)
+        I18n.backend.store_translations(:en, { katalyst: { govuk: { attachment: {
+                                          upload_succeeded:      "All done!",
+                                          remove_button_content: "Bin",
+                                        } } } })
+        example.run
+      ensure
+        I18n.backend.reload!
+      end
+
+      it "renders the override onto the data-i18n attribute" do
+        wrapper = html.find(".govuk-file-upload-wrapper", visible: :all)
+
+        expect(wrapper["data-i18n.upload-succeeded"]).to eq("All done!")
+      end
+
+      it "renders the override into the server figure" do
+        expect(html).to have_css("figure.govuk-attachment .actions button", text: "Bin")
+      end
+    end
+
     context "with an attached image" do
       it "renders one figure with preview, caption, and actions, in order" do
         expect(html).to have_css("figure.govuk-attachment > img + figcaption + div.actions", count: 1, visible: :all)
@@ -200,6 +363,39 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
       end
     end
 
+    # Brand follows CSS classes only: a rebranding consumer replaces the
+    # stylesheet, but the JS ships with the gem and registers fixed govuk
+    # controller identifiers — behavioural wiring stays govuk whatever the
+    # brand.
+    context "with a non-default brand" do
+      around do |example|
+        GOVUKDesignSystemFormBuilder.brand = "defra"
+        example.run
+      ensure
+        GOVUKDesignSystemFormBuilder.brand = "govuk"
+      end
+
+      it "prefixes the figure class with the brand" do
+        expect(html).to have_css("figure.defra-attachment", visible: :all)
+      end
+
+      it "prefixes the wrapper class with the brand" do
+        expect(html).to have_css(".defra-file-upload-wrapper", visible: :all)
+      end
+
+      it "connects the figure to the attachment controller" do
+        expect(html).to have_css("figure.defra-attachment[data-controller='govuk-attachment']", visible: :all)
+      end
+
+      it "connects the wrapper to the file-upload controller" do
+        expect(html).to have_css(".defra-file-upload-wrapper[data-controller='govuk-file-upload']", visible: :all)
+      end
+
+      it "keeps the remove action on the govuk identifier" do
+        expect(html).to have_css("button[data-action='govuk-attachment#destroy']", visible: :all)
+      end
+    end
+
     # The preview URL is lazy — the variant is processed when the browser
     # requests it, so rendering the form never touches the blob's bytes and
     # a blob that can't be processed costs a broken image, not an error.
@@ -305,6 +501,17 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
           .to eq(helper.rails_representation_path(representation))
       end
 
+      it "renders the preview from the configured representation" do
+        config                                   = GOVUKDesignSystemFormBuilder.config
+        original                                 = config.attachment_preview_representation
+        config.attachment_preview_representation = { resize_to_limit: [50, 50] }
+
+        expect(html.find("figure.govuk-attachment img")[:src])
+          .to eq(helper.rails_representation_path(blob.representation(resize_to_limit: [50, 50])))
+      ensure
+        config.attachment_preview_representation = original
+      end
+
       it "resolves the preview URL through main_app" do
         allow(helper).to receive(:respond_to?).and_call_original
         allow(helper).to receive(:respond_to?).with(:rails_representation_path).and_return(false)
@@ -408,6 +615,26 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
 
         expect(Rails.logger).to have_received(:warn)
                                   .with(include("avatar").and(include("ActiveStorage::IntegrityError")))
+      end
+    end
+
+    context "when the pending upload's tempfile has vanished before render" do
+      before do
+        profile.avatar = Rack::Test::UploadedFile.new(file_fixture("avatar.png"), "image/png")
+        File.unlink(profile.attachment_changes["avatar"].attachable.path)
+      end
+
+      it "drops the figure rather than failing the render" do
+        expect(html).to have_no_css("figure.govuk-attachment")
+      end
+
+      it "logs the dropped upload" do
+        allow(Rails.logger).to receive(:warn)
+
+        html
+
+        expect(Rails.logger).to have_received(:warn)
+                                  .with(include("avatar").and(include("Errno::ENOENT")))
       end
     end
 
