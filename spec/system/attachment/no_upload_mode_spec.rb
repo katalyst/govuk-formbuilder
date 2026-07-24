@@ -13,12 +13,7 @@ RSpec.describe "Attachment field without direct upload", :aggregate_failures do
   let(:profile) { create(:profile) }
 
   before do
-    Capybara.enable_aria_label = true
     disable_direct_uploads
-  end
-
-  after do
-    Capybara.enable_aria_label = false
   end
 
   it "previews the selection without starting an upload" do

@@ -12,14 +12,6 @@ RSpec.describe "Attachment field status", :aggregate_failures do
 
   let(:profile) { create(:profile) }
 
-  before do
-    Capybara.enable_aria_label = true
-  end
-
-  after do
-    Capybara.enable_aria_label = false
-  end
-
   it "reports an empty field as having no file chosen" do
     visit edit_profile_path(profile)
 

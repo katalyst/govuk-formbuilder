@@ -26,14 +26,6 @@ RSpec.describe "Removing an attachment", :aggregate_failures do
     end
   end
 
-  before do
-    Capybara.enable_aria_label = true
-  end
-
-  after do
-    Capybara.enable_aria_label = false
-  end
-
   it "offers a remove control on each figure whose accessible name includes the filename" do
     visit edit_profile_path(profile)
 

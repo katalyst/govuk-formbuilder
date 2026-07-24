@@ -8,6 +8,7 @@ RSpec.configure do |config|
 
   Capybara.server            = :puma, { Silent: true }
   Capybara.disable_animation = true
+  Capybara.enable_aria_label = true
 
   # Rails will set `:selenium` as the runner for system tests by default, but this happens after `before` hooks.
   # We want to use our configured javascript driver and ensure that this is set before

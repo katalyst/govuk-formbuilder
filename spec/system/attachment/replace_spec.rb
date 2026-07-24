@@ -20,14 +20,6 @@ RSpec.describe "Replacing an attachment", :aggregate_failures do
     end
   end
 
-  before do
-    Capybara.enable_aria_label = true
-  end
-
-  after do
-    Capybara.enable_aria_label = false
-  end
-
   it "supersedes the existing figure, leaving one visible" do
     visit edit_profile_path(profile)
 
