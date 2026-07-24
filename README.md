@@ -49,6 +49,12 @@ You'll need to include the helper to make this method available, which you can a
 helper Katalyst::GOVUK::FormBuilder::Frontend
 ```
 
+### JavaScript dependencies
+
+The formbuilder module imports `@hotwired/stimulus` and `@rails/activestorage`. With
+importmaps the gem pins `@rails/activestorage` for you. If you use jsbundling or similar,
+you'll need both packages available at runtime.
+
 ## Extensions
 
 We include some optional extensions for integrating with gems that we (Katalyst) commonly use.

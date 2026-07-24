@@ -562,4 +562,26 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
       end
     end
   end
+
+  # The field requires an ActiveStorage::Attached value: a plain attribute
+  # (e.g. a form object's attr_accessor) has no signed ids to round-trip, so
+  # the field cannot edit or re-render it — plain uploads stay with
+  # govuk_file_field. Failing fast beats a broken editing experience.
+  describe "#govuk_attachment_field (non-ActiveStorage attribute)" do
+    let(:builder) { described_class.new(:form, form_object, helper, {}) }
+    let(:form_object) { NonStorageForm.new }
+
+    before do
+      stub_const("NonStorageForm", Class.new do
+        include ActiveModel::Model
+
+        attr_accessor :upload
+      end)
+    end
+
+    it "rejects the attribute with an error naming it" do
+      expect { builder.govuk_attachment_field(:upload) }
+        .to raise_error(ArgumentError, /upload/)
+    end
+  end
 end

@@ -12,6 +12,10 @@
   "dependencies": {
     "govuk-frontend": "^6.0.0"
   },
+  "peerDependencies": {
+    "@hotwired/stimulus": ">= 3.0.0",
+    "@rails/activestorage": ">= 8.0.0"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^1.0.0",

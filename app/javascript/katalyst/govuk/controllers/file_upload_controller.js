@@ -54,7 +54,7 @@ export default class FileUploadController extends Controller {
       // the button's `aria-labelledby` reference resolves.
       this.ensureLabelId();
       fileInput.id = `${this.id}-input`;
-      fileInput.toggleAttribute("hidden", true);
+      fileInput.setAttribute("hidden", "hidden");
       uploadButton = createUploadButton(this.id, this.i18n, fileInput);
       fileInput.insertAdjacentElement("beforebegin", uploadButton);
 
