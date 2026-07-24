@@ -128,7 +128,7 @@ RSpec.describe "Updating a profile's avatar" do
     end
 
     it "links the error summary entry to the avatar field" do
-      input = document.at_css("input[name='profile[avatar]']")
+      input = document.at_css("input[type=file][name='profile[avatar]']")
 
       expect(document.at_css(".govuk-error-summary a[href='##{input[:id]}']").text).to match(/blank/i)
     end
