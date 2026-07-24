@@ -439,6 +439,21 @@ module Katalyst
           @fieldset_context ||= []
         end
 
+        # URL for an attachment preview. ActiveStorage's representation route
+        # lives in the application's route set, so engine-mounted forms
+        # resolve it through main_app. Returns nil when no route is
+        # available, in which case the figure renders without a preview.
+        #
+        # @param [ActiveStorage::Variant,ActiveStorage::VariantWithRecord,ActiveStorage::Preview] representation
+        # @return [String,nil]
+        def attachment_preview_url(representation)
+          if @template.respond_to?(:rails_representation_path)
+            @template.rails_representation_path(representation)
+          elsif @template.respond_to?(:main_app) && @template.main_app.respond_to?(:rails_representation_path)
+            @template.main_app.rails_representation_path(representation)
+          end
+        end
+
         private
 
         def direct_upload_url

@@ -95,15 +95,21 @@ module Katalyst
                        data: { action: "#{brand}-attachment#destroy" })
           end
 
+          # The representation is rendered lazily: the variant is processed
+          # when the browser requests it, never during the form render. If the
+          # blob's bytes turn out to be missing or unprocessable the preview
+          # simply fails to load — validating attachment content is the
+          # model's responsibility, not the form's.
           # @param [ActiveStorage::Blob] blob
           # @return [ActiveSupport::SafeBuffer,nil]
           def attachment_preview_for(blob)
             return unless blob.representable?
 
+            url = @builder.attachment_preview_url(blob.representation(resize_and_pad: [100, 100, { crop: :centre }]))
+            return if url.nil?
+
             # Setting alt to "" as the details already describe the attachment, equivalent to role="presentation"
-            @builder.image_tag(blob.representation(resize_and_pad: [100, 100, { crop: :centre }]).processed, alt: "")
-          rescue ActiveStorage::Error
-            nil # no preview available
+            @builder.image_tag(url, alt: "")
           end
 
           # The caption is a polite atomic live region: JS writes upload status

@@ -95,6 +95,10 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         expect(html).to have_css("figure.govuk-attachment .actions > select + button", visible: :all)
       end
 
+      it "does not process the preview variant at render time" do
+        expect { html }.not_to change(ActiveStorage::VariantRecord, :count)
+      end
+
       it "captions the figure with the filename" do
         expect(html).to have_css("figure.govuk-attachment figcaption .filename", text: "avatar.png")
       end
@@ -196,17 +200,18 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
       end
     end
 
-    context "with an attached image that can't be rendered" do
-      # Deleting the blob's bytes from the service makes preview generation
-      # raise an ActiveStorage error; the specific cause is not important
+    # The preview URL is lazy — the variant is processed when the browser
+    # requests it, so rendering the form never touches the blob's bytes and
+    # a blob that can't be processed costs a broken image, not an error.
+    context "with an attached image whose bytes are missing" do
       before { blob.service.delete(blob.key) }
 
       it "renders the figure" do
         expect(html).to have_css("figure.govuk-attachment .filename", text: "avatar.png")
       end
 
-      it "omits the preview image" do
-        expect(html).to have_no_css("figure.govuk-attachment img")
+      it "renders the preview, leaving the failure to the image request" do
+        expect(html.find("figure.govuk-attachment img")[:src]).to be_present
       end
 
       it "keeps the blob's signed id as the keep option" do
@@ -286,6 +291,34 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         allow(helper).to receive(:main_app).and_return(Object.new)
 
         expect(html).to have_css("input[type=file]:not([data-direct-upload-url])", visible: :all)
+      end
+    end
+
+    # ActiveStorage's representation route lives in the application's route
+    # set, so an engine-mounted form must resolve the preview URL through
+    # main_app — the same resolution direct_upload_url uses.
+    describe "preview URL resolution" do
+      let(:representation) { blob.representation(resize_and_pad: [100, 100, { crop: :centre }]) }
+
+      it "renders the preview from the representation route" do
+        expect(html.find("figure.govuk-attachment img")[:src])
+          .to eq(helper.rails_representation_path(representation))
+      end
+
+      it "resolves the preview URL through main_app" do
+        allow(helper).to receive(:respond_to?).and_call_original
+        allow(helper).to receive(:respond_to?).with(:rails_representation_path).and_return(false)
+
+        expect(html.find("figure.govuk-attachment img")[:src])
+          .to eq(helper.main_app.rails_representation_path(representation))
+      end
+
+      it "renders no preview when no representation route is available" do
+        allow(helper).to receive(:respond_to?).and_call_original
+        allow(helper).to receive(:respond_to?).with(:rails_representation_path).and_return(false)
+        allow(helper).to receive(:main_app).and_return(Object.new)
+
+        expect(html).to have_no_css("figure.govuk-attachment img")
       end
     end
 
