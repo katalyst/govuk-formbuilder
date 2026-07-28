@@ -73,7 +73,7 @@ export default class AttachmentController extends Controller {
     this.element.dataset.state = "uploading";
     this.statusText = "";
     this.retryButton?.remove();
-    const progressTag = createProgressTag(this.captionTag?.id);
+    const progressTag = createProgressTag(this.filenameTag.id);
     this.captionTag.appendChild(progressTag);
     this.input.addEventListener("direct-upload:progress", this.progress);
 
@@ -166,6 +166,13 @@ export default class AttachmentController extends Controller {
   }
 
   /**
+   * @returns {HTMLElement} the caption's filename span, or null
+   */
+  get filenameTag() {
+    return this.element.querySelector("figcaption .filename");
+  }
+
+  /**
    * @returns {HTMLElement} the figure's actions container, or null
    */
   get actionsTag() {
@@ -199,7 +206,9 @@ export default class AttachmentController extends Controller {
   }
 
   get removeButton() {
-    return this.element.querySelector(".actions button[data-action*='destroy']");
+    return this.element.querySelector(
+      ".actions button[data-action*='destroy']",
+    );
   }
 }
 
@@ -210,15 +219,15 @@ export function createAttachment(input, file, i18n) {
   const id = ++nextAttachmentId;
 
   template.innerHTML = `
-    <figure class="${config.brand}-attachment" data-controller="govuk-attachment" aria-labelledby="attachment-${id}-caption">
+    <figure class="${config.brand}-attachment" data-controller="govuk-attachment" aria-labelledby="attachment-${id}-filename">
       <img alt="" class="preview" src="">
-      <figcaption id="attachment-${id}-caption" class="caption" aria-atomic="true" aria-live="polite">
-        <span class="filename"></span>
+      <figcaption class="caption" aria-atomic="true" aria-live="polite">
+        <span id="attachment-${id}-filename" class="filename"></span>
         <span class="size"></span>
         <span class="status"></span>
       </figcaption>
       <div class="actions">
-        <select id="attachment-${id}-input" name="${input.name}" aria-labelledby="attachment-${id}-caption">
+        <select id="attachment-${id}-input" name="${input.name}" aria-labelledby="attachment-${id}-filename">
           <option selected="selected" value=""></option>
           <option value=""></option>
         </select>

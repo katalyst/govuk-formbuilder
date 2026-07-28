@@ -44,6 +44,20 @@ RSpec.describe "Async file upload", :aggregate_failures do
     expect(gallery_field).to have_css("figure.govuk-attachment figcaption .status", text: /uploaded/i)
   end
 
+  it "names the progress bar after the file it reports" do
+    block_direct_uploads
+    visit edit_profile_path(profile)
+
+    choose_gallery_file("avatar.png")
+
+    progress   = gallery_field.find("figure.govuk-attachment progress")
+    referenced = progress["aria-labelledby"].to_s.split.map { |id| page.find(id: id, visible: :all).text }
+
+    expect(referenced.join(" ")).to eq("avatar.png")
+
+    release_direct_uploads
+  end
+
   it "reaches upload-successful with the blob's signed id in the select" do
     visit edit_profile_path(profile)
 

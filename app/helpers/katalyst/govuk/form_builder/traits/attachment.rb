@@ -57,7 +57,7 @@ module Katalyst
           # @return [ActiveSupport::SafeBuffer,nil]
           def attachment_for(blob)
             tag.figure(class: "#{brand}-attachment",
-                       aria:  { labelledby: attachment_id_for(blob, :caption) },
+                       aria:  { labelledby: attachment_id_for(blob, :filename) },
                        data:  { controller: "govuk-attachment" }) do
               safe_join([
                           attachment_preview_for(blob),
@@ -92,7 +92,7 @@ module Katalyst
               { selected: blob.signed_id },
               id:   attachment_id_for(blob, :input),
               name: @builder.field_name(@attribute_name, multiple: many?),
-              aria: { labelledby: attachment_id_for(blob, :caption) },
+              aria: { labelledby: attachment_id_for(blob, :filename) },
             )
           end
 
@@ -161,11 +161,9 @@ module Katalyst
           # @param [ActiveStorage::Blob] blob
           # @return [ActiveSupport::SafeBuffer,nil]
           def attachment_caption_for(blob)
-            tag.figcaption(id:    attachment_id_for(blob, :caption),
-                           class: "caption",
-                           aria:  { atomic: true, live: "polite" }) do
+            tag.figcaption(class: "caption", aria: { atomic: true, live: "polite" }) do
               safe_join([
-                          tag.span(blob.filename, class: "filename"),
+                          tag.span(blob.filename, id: attachment_id_for(blob, :filename), class: "filename"),
                           " ",
                           tag.span(number_to_human_size(blob.byte_size), class: "size"),
                           " ",

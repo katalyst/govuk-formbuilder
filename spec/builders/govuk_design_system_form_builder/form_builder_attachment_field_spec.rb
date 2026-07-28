@@ -336,10 +336,16 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         expect(html.find("figure.govuk-attachment img")["alt"]).to eq("")
       end
 
-      it "labels the figure with its caption" do
+      it "labels the figure with its filename" do
         figure = html.find("figure.govuk-attachment")
 
-        expect(figure["aria-labelledby"]).to eq(builder.field_id(:avatar, :attachment, blob.id, :caption))
+        expect(figure["aria-labelledby"]).to eq(builder.field_id(:avatar, :attachment, blob.id, :filename))
+      end
+
+      it "gives the filename span the id the figure's label references" do
+        filename_id = builder.field_id(:avatar, :attachment, blob.id, :filename)
+
+        expect(html).to have_css("figure.govuk-attachment figcaption .filename[id='#{filename_id}']")
       end
 
       it "makes the caption a polite live region so status changes are announced" do
