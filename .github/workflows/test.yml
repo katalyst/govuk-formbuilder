@@ -19,3 +19,13 @@ jobs:
       - name: Test
         run: |
           bin/ci
+        env:
+          FERRUM_PROCESS_TIMEOUT: 30
+      - name: Archive screenshots and logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-failure-outputs
+          path: |
+            spec/dummy/tmp/screenshots
+            spec/dummy/log

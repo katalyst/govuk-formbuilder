@@ -19,6 +19,10 @@ RSpec.configure do |config|
       # required for docker (github-ci)
       browser_options: { "no-sandbox": nil },
     }
+
+    # Boot the shared browser outside any example so no spec's timing includes
+    # the first Chrome launch. The driver memoises it, so later groups no-op.
+    Capybara.current_session.driver.browser
   end
 
   config.include Capybara::RSpecMatchers, type: :request
