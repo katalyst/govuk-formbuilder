@@ -105,6 +105,7 @@ export default class AttachmentController extends Controller {
 
   retry() {
     this.performUpload(this.directUpload.file);
+    this.removeButton?.focus();
   }
 
   progress = ({ detail }) => {
@@ -113,10 +114,7 @@ export default class AttachmentController extends Controller {
   };
 
   destroy() {
-    const focusTarget =
-      this.element.nextElementSibling?.querySelector("button") ??
-      this.element.previousElementSibling?.querySelector("button") ??
-      this.uploadButton;
+    const focusTarget = this.uploadButton;
 
     const remove = new CustomEvent("govuk:remove", {
       detail: {
@@ -198,6 +196,10 @@ export default class AttachmentController extends Controller {
 
   get retryButton() {
     return this.element.querySelector(".actions button.retry");
+  }
+
+  get removeButton() {
+    return this.element.querySelector(".actions button[data-action*='destroy']");
   }
 }
 

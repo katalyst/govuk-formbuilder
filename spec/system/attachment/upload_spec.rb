@@ -129,6 +129,27 @@ RSpec.describe "Async file upload", :aggregate_failures do
     expect(ActiveStorage::Blob.find_signed(signed_id)&.filename&.to_s).to eq("avatar.png")
   end
 
+  it "moves focus to the figure's remove button when retry starts" do
+    block_direct_uploads
+    visit edit_profile_path(profile)
+
+    choose_gallery_file("avatar.png")
+    release_direct_uploads(:internal_server_error)
+
+    gallery_field.find("figure.govuk-attachment[data-state=upload-failed]", wait: 10)
+
+    click_button "Try again"
+
+    # Retrying removes the retry control from under the user; focus moves to
+    # the figure's remove button — the figure's only control while uploading
+    # — rather than dropping to <body>.
+    expect(
+      page.evaluate_script("document.activeElement.getAttribute('aria-label')"),
+    ).to eq("Remove avatar.png")
+
+    release_direct_uploads(:ok)
+  end
+
   it "offers a single retry control however many attempts fail" do
     block_direct_uploads
     visit edit_profile_path(profile)

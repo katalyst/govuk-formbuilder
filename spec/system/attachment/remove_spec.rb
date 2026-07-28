@@ -11,8 +11,8 @@ require "rails_helper"
 #   * removing a has_one's figure still submits the detach — removing with
 #     JavaScript equals choosing the remove option without it, so a required
 #     attachment surfaces its presence error instead of silently surviving
-#   * focus moves to the next figure's control, else the previous one's,
-#     else the field's upload button — never lost to <body>
+#   * focus moves to the field's upload button, whose status summarises
+#     what remains — never lost to <body>
 #   * removal is announced through the field's announcements region, naming
 #     the file — the figure's own live region disappears with the figure
 RSpec.describe "Removing an attachment", :aggregate_failures do
@@ -95,22 +95,21 @@ RSpec.describe "Removing an attachment", :aggregate_failures do
     expect(profile.reload.cv).not_to be_attached
   end
 
-  it "moves focus to the next figure's control, then falls back to the file input" do
+  it "moves focus to the field's upload button" do
     visit edit_profile_path(profile)
+    on_upload_button = %(document.activeElement.matches("button#profile-gallery-field"))
 
     click_button "Remove first.png"
 
-    # The next figure's remove control takes focus...
-    focused = "document.activeElement.getAttribute('aria-label') || document.activeElement.textContent"
-    expect(page.evaluate_script(focused)).to include("second.png")
+    # Mid-gallery and last removal alike: the upload button's status is the
+    # summary of what remains, and its focus reading carries the updated
+    # count — a sibling figure's reading would not. Never <body>, and not
+    # some other field's input.
+    expect(page.evaluate_script(on_upload_button)).to be(true)
 
     click_button "Remove second.png"
 
-    # ...and with no figures left, this field's file upload button does — never <body>,
-    # and not some other field's input.
-    expect(
-      page.evaluate_script(%(document.activeElement.matches("button#profile-gallery-field"))),
-    ).to be(true)
+    expect(page.evaluate_script(on_upload_button)).to be(true)
   end
 
   it "announces the removal, naming the file" do
