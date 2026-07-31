@@ -35,7 +35,7 @@ module Katalyst
             config.attachment_preview_representation = value
           end
 
-          config.attachment_preview_representation = { resize_and_pad: [100, 100, { crop: :centre }] }.freeze
+          config.attachment_preview_representation = { resize_to_limit: [100, 100] }.freeze
 
           def use_legacy_file_fields?
             config.use_legacy_file_fields

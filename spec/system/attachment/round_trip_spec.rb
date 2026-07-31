@@ -3,7 +3,7 @@
 require "rails_helper"
 
 # End-to-end round-trip of a direct-uploaded attachment across an invalid
-# submit (E1/E2), exercised through the gallery (has_many_attached) field.
+# submit, exercised through the gallery (has_many_attached) field.
 #
 # A file is direct-uploaded with JavaScript (its figure reaches
 # upload-successful, carrying the new blob's signed id), then the form is made

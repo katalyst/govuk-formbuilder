@@ -17,13 +17,16 @@ RSpec.describe "Updating a profile's avatar" do
     expect(profile.reload.avatar).to be_attached
   end
 
-  it "rejects removal: blank fails the presence validation and keeps the file" do
+  it "rejects removal: blank fails the presence validation" do
     patch profile_path(profile), params: { profile: { avatar: "" } }
 
-    aggregate_failures do
-      expect(response).to have_http_status(:unprocessable_content)
-      expect(profile.reload.avatar).to be_attached
-    end
+    expect(response).to have_http_status(:unprocessable_content)
+  end
+
+  it "rejects removal: blank keeps the stored file" do
+    patch profile_path(profile), params: { profile: { avatar: "" } }
+
+    expect(profile.reload.avatar).to be_attached
   end
 
   it "replaces when a different blob's signed id is submitted" do

@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { I18n } from "govuk-frontend/dist/govuk/i18n.mjs";
 import { closestAttributeValue } from "govuk-frontend/dist/govuk/common/closest-attribute-value.mjs";
 import { createAttachment } from "./attachment_controller";
-import config, { attachmentConfig } from "../config";
+import config, { attachmentConfig, uploadButtonSelector } from "../config";
 
 export default class FileUploadController extends Controller {
   connect() {
@@ -333,9 +333,7 @@ export default class FileUploadController extends Controller {
   }
 
   get uploadButton() {
-    return this.element.querySelector(
-      "[type='button']:has(+ input[type='file'])",
-    );
+    return this.element.querySelector(uploadButtonSelector);
   }
 
   get isDragging() {

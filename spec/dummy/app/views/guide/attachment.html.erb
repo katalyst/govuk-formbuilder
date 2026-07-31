@@ -1,0 +1,14 @@
+<h1>Attachments</h1>
+
+<p>
+  The attachment field is this gem's ActiveStorage extension — there is no
+  upstream page to mirror. Each example below is a rendered form loaded in its
+  own turbo frame: choose or drop files to see direct upload, previews, and
+  per-file keep/remove controls; submitting round-trips the selection as blob
+  signed ids.
+</p>
+
+<%= guide_example("attachment", "single", "Single image attachment") %>
+<%= guide_example("attachment", "multiple", "Multiple image attachments") %>
+
+<p><%= link_to("Back to guide", root_path) %></p>

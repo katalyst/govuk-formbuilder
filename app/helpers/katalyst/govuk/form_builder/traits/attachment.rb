@@ -197,8 +197,8 @@ module Katalyst
           def persist_pending_change(change)
             change.upload
             change.blob.save!
-          rescue ActiveStorage::Error => e
-            # no recovery available
+          rescue ActiveStorage::Error, Errno::ENOENT => e
+            # no recovery available (ENOENT: tempfile vanished before render)
             log_dropped_upload(e)
           end
 

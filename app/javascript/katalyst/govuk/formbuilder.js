@@ -13,24 +13,24 @@ import {
   isSupported,
 } from "govuk-frontend/dist/govuk/common/index.mjs";
 
-function initAll(config) {
-  let _config$scope;
-  config = typeof config !== "undefined" ? config : {};
+// Component options captured from the initAll call, reused by every
+// observer-driven sweep.
+let options = {};
+
+function enhance($scope = document) {
   if (!isSupported()) {
     console.log(new SupportError());
     return;
   }
   const components = [
-    [Button, config.button],
-    [CharacterCount, config.characterCount],
+    [Button, options.button],
+    [CharacterCount, options.characterCount],
     [Checkboxes],
-    [ErrorSummary, config.errorSummary],
-    [FileUpload, config.fileUpload],
+    [ErrorSummary, options.errorSummary],
+    [FileUpload, options.fileUpload],
     [Radios],
-    [PasswordInput, config.passwordInput],
+    [PasswordInput, options.passwordInput],
   ];
-  const $scope =
-    (_config$scope = config.scope) != null ? _config$scope : document;
   components.forEach(([Component, config]) => {
     const selector = `[data-module="${Component.moduleName}"]`;
     // The scope itself can be a component root (an observed insertion is
@@ -77,23 +77,21 @@ function supportMarked(body) {
 }
 
 function observe(body) {
-  // A morph reconciles the live DOM against a server response that carries
-  // no JS-set state, stripping the body markers, every component's
-  // data-*-init flag, and all injected UI — with no lifecycle events. Losing
-  // the markers is therefore the signal that a morph happened: re-mark, then
-  // sweep. Construction is guarded per component (an already-initialised
-  // root throws InitError, which initAll swallows), so the sweep only
-  // (re)enhances roots whose flags were stripped. Re-marking is
-  // check-then-set, so observing our own write terminates in one bounce.
+  // The body markers are JS-set, so a morph — which reconciles the live DOM
+  // against server HTML, with no lifecycle events — strips them, along with
+  // every component's data-*-init flag. Missing markers signal the morph:
+  // re-mark, then sweep; the isInitialised guard re-enhances only roots
+  // whose flags were stripped. Re-marking is check-then-set, so observing
+  // our own write terminates in one bounce.
   //
-  // Registered before the childList observer: callbacks run in creation
-  // order, so when a strip and insertions land in one batch the markers are
-  // back before any arrival sweep consults isSupported().
+  // Registered before the arrival observer: callbacks run in creation
+  // order, so markers are back before an arrival sweep consults
+  // isSupported().
   new MutationObserver(() => {
     if (supportMarked(body)) return;
 
     markSupport(body);
-    initAll();
+    enhance();
   }).observe(body, { attributes: true, attributeFilter: ["class"] });
 
   // Components can also arrive after load — lazily-loaded turbo frames,
@@ -103,37 +101,100 @@ function observe(body) {
   new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
-        if (node instanceof Element) initAll({ scope: node });
+        if (node instanceof Element) enhance(node);
       }
     }
   }).observe(body, { childList: true, subtree: true });
 }
 
-// Entry point for the govuk_formbuilder_init snippet: mark the page, enhance
-// it, and keep both maintained as the DOM changes. The observers attach to
-// the <body> element itself, so a Turbo replace render — which swaps in a
-// new body and re-executes the snippet — disposes and recreates them, while
-// a morph retains the body and the observers with it.
-function init(options = {}) {
-  if (options.brand) config.brand = options.brand;
-
-  const body = document.body;
-
-  if (body.__govukFormbuilderInit) return;
+function setup(body) {
+  if (!body || body.__govukFormbuilderInit) return;
   body.__govukFormbuilderInit = true;
 
   markSupport(body);
-  initAll();
+  enhance();
   observe(body);
 }
 
+// The gem's Stimulus controllers register exactly once, on whichever
+// application claims them first: the consumer's (via start) or a gem-owned
+// application created on demand (the snippet path, for apps not otherwise
+// running Stimulus). Stimulus itself observes the whole document, so
+// registration — unlike the body-scoped setup — survives Turbo visits.
+let registered = false;
+
+function register(application = undefined) {
+  if (registered) return;
+  registered = true;
+
+  (application ?? Application.start()).load(controllers);
+}
+
+function applyConfig(config) {
+  if (config.brand) brandConfig.brand = config.brand;
+  options = config;
+}
+
+/**
+ * Enhance the current <body>: mark it as JS-capable, enhance its GOV.UK
+ * components, and observe it for arrivals and morphs. Scoped to the body it
+ * ran against — it does not survive a body replacement, so render it with
+ * every page (the govuk_formbuilder_init snippet at the end of <body>).
+ * Registers the gem's Stimulus controllers on a gem-owned application
+ * unless start() has already claimed them.
+ *
+ * @param {object} [config] per-component config (button, characterCount,
+ *   errorSummary, fileUpload, passwordInput)
+ * @param {string} [config.brand] CSS class prefix for injected UI (default "govuk")
+ */
+function initAll(config = {}) {
+  applyConfig(config);
+  register();
+  setup(document.body);
+}
+
+let watching = false;
+
+/**
+ * Wire the gem into your Stimulus application and keep the page enhanced
+ * for the life of the session, including across Turbo visits — call once
+ * from your own bundle:
+ *
+ *   import GOVUK from "@katalyst/govuk-formbuilder";
+ *   GOVUK.start(application);
+ *
+ * @param {object} [application] Stimulus application to register the gem's
+ *   controllers on (a gem-owned application is created when omitted)
+ * @param {object} [config] as initAll's config
+ */
+function start(application = undefined, config = {}) {
+  applyConfig(config);
+  register(application);
+
+  if (!watching) {
+    watching = true;
+
+    // The body-scoped setup dies with each Turbo visit; the documentElement
+    // survives them, so watch it and set up against every new body. Also
+    // covers a start() before <body> exists — the body's insertion is
+    // itself a childList mutation here.
+    new MutationObserver(() => setup(document.body)).observe(
+      document.documentElement,
+      { childList: true },
+    );
+  }
+
+  setup(document.body);
+}
+
 // stimulus controllers
+import { Application } from "@hotwired/stimulus";
 import controllers from "./controllers";
-import config from "./config";
+import brandConfig from "./config";
+
+export default { start };
 
 export {
-  controllers as default,
-  init,
   initAll,
   Button,
   CharacterCount,
