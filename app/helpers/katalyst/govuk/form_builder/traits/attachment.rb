@@ -101,9 +101,10 @@ module Katalyst
           # @return [ActiveSupport::SafeBuffer,nil]
           def attachment_remove_for(blob)
             tag.button(remove_button_content,
-                       type: "button",
-                       aria: { label: remove_button_label(blob) },
-                       data: { action: "govuk-attachment#destroy" })
+                       type:  "button",
+                       class: "#{brand}-button #{brand}-button--secondary #{brand}-attachment__remove",
+                       aria:  { label: remove_button_label(blob) },
+                       data:  { action: "govuk-attachment#destroy", module: "govuk-button" })
           end
 
           # The remove strings render here and in the JS figure template, so

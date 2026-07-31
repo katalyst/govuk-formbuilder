@@ -332,6 +332,24 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         expect(button["type"]).to eq("button")
       end
 
+      it "styles the remove button as a secondary govuk button" do
+        button = html.find("figure.govuk-attachment .actions button")
+
+        expect(button[:class].split).to include("govuk-button", "govuk-button--secondary", "govuk-attachment__remove")
+      end
+
+      it "connects the remove button to govuk-frontend's button behaviour" do
+        button = html.find("figure.govuk-attachment .actions button")
+
+        expect(button["data-module"]).to eq("govuk-button")
+      end
+
+      it "renders Remove as the default remove button content" do
+        button = html.find("figure.govuk-attachment .actions button")
+
+        expect(button.text).to eq("Remove")
+      end
+
       it "hides the preview image from assistive technology" do
         expect(html.find("figure.govuk-attachment img")["alt"]).to eq("")
       end
@@ -387,6 +405,13 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
 
       it "prefixes the wrapper class with the brand" do
         expect(html).to have_css(".defra-file-upload-wrapper", visible: :all)
+      end
+
+      it "prefixes the remove button classes with the brand" do
+        expect(html).to have_css(
+          ".defra-attachment .actions button.defra-button.defra-button--secondary.defra-attachment__remove",
+          visible: :all,
+        )
       end
 
       it "connects the figure to the attachment controller" do

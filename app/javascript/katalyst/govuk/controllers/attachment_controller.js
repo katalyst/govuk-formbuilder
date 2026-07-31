@@ -202,7 +202,7 @@ export default class AttachmentController extends Controller {
   }
 
   get retryButton() {
-    return this.element.querySelector(".actions button.retry");
+    return this.element.querySelector(".actions button[data-action*='retry']");
   }
 
   get removeButton() {
@@ -231,7 +231,7 @@ export function createAttachment(input, file, i18n) {
           <option selected="selected" value=""></option>
           <option value=""></option>
         </select>
-        <button type="button" data-action="govuk-attachment#destroy"></button>
+        <button type="button" class="${config.brand}-button ${config.brand}-button--secondary ${config.brand}-attachment__remove" data-action="govuk-attachment#destroy" data-module="govuk-button"></button>
       </div>
     </figure>
   `;
@@ -275,10 +275,11 @@ function humanSize(bytes) {
 function createRetryButton(filename, i18n) {
   const button = document.createElement("BUTTON");
   button.type = "button";
-  button.className = "retry";
+  button.className = `${config.brand}-button ${config.brand}-button--secondary ${config.brand}-attachment__retry`;
   button.textContent = i18n.t("retryButton");
   button.setAttribute("aria-label", `${i18n.t("retryButton")} ${filename}`);
   button.dataset.action = "govuk-attachment#retry";
+  button.dataset.module = "govuk-button";
   return button;
 }
 

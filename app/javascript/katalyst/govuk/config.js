@@ -26,7 +26,7 @@ const Attachment = {
       retryButton: "Try again",
       fileRemoved: "%{filename} removed",
       removeButton: "Remove %{filename}",
-      removeButtonContent: "×",
+      removeButtonContent: "Remove",
     },
   },
   schema: { properties: { i18n: { type: "object" } } },

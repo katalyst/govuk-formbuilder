@@ -13,4 +13,4 @@ en:
         retry_button: "Try again"
         file_removed: "%{filename} removed"
         remove_button: "Remove %{filename}"
-        remove_button_content: "×"
+        remove_button_content: "Remove"

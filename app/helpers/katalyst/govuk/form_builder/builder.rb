@@ -309,7 +309,7 @@ module Katalyst
         #   no-JavaScript remove option. The component will replace the %{filename} placeholder with the figure's
         #   file name. Default is "Remove %{filename}".
         # @param remove_button_content_text [String] The visible content of each figure's remove button. Default is
-        #   "×".
+        #   "Remove".
         # @param & [Block] arbitrary HTML that will be rendered between the hint and the input
         #
         # @example A photo upload field with file type specifier and injected content

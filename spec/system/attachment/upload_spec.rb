@@ -109,6 +109,10 @@ RSpec.describe "Async file upload", :aggregate_failures do
     expect(figure).to have_css("button[aria-label*='Remove']")
     expect(figure).to have_css("button[type=button][aria-label='Try again avatar.png']", text: "Try again")
 
+    # Both figure controls follow govuk-frontend's button conventions (the
+    # password toggle's markup shape).
+    expect(figure).to have_css("button.govuk-button.govuk-button--secondary.govuk-attachment__retry")
+
     click_button "Continue"
 
     # Submitting without clearing the error does not save the file
