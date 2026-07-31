@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { DirectUploadController } from "@rails/activestorage";
 import { I18n } from "govuk-frontend/dist/govuk/i18n.mjs";
 import { closestAttributeValue } from "govuk-frontend/dist/govuk/common/closest-attribute-value.mjs";
-import config, { attachmentConfig } from "../config";
+import config, { attachmentConfig, uploadButtonSelector } from "../config";
 
 class AttachmentUploadController extends DirectUploadController {
   async start(option) {
@@ -149,7 +149,7 @@ export default class AttachmentController extends Controller {
   get uploadButton() {
     return this.element
       .closest(`.${config.brand}-file-upload-wrapper`)
-      ?.querySelector("[type='button']:has(+ input[type='file'])");
+      ?.querySelector(uploadButtonSelector);
   }
 
   set statusText(message) {

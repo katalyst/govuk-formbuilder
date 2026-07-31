@@ -195,8 +195,13 @@ method) resolves the representation route with the same `main_app` fallback
 and returns nil when no route is available — the figure then renders without
 a preview — so engine builders can override preview resolution too. The
 preview transformation is configurable
-(`config.attachment_preview_representation`, default a 100×100 centre-padded
-thumbnail).
+(`config.attachment_preview_representation`); the default fits the image
+within 100×100 preserving aspect, never upscaling
+(`resize_to_limit`). Previews are contained, not cropped: the whole image
+shows, letterboxed by CSS (`object-fit: contain` in a square preview box)
+rather than by baked-in padding — variants carry no background bars, and
+client-inserted previews get the same treatment so framing doesn't change
+when a figure round-trips.
 
 `multiple` is inferred from the attribute's ActiveStorage reflection
 (`has_many_attached` → true), and an explicit `multiple:` argument is

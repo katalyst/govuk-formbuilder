@@ -111,7 +111,7 @@ RSpec.describe "Async file upload", :aggregate_failures do
 
     # Both figure controls follow govuk-frontend's button conventions (the
     # password toggle's markup shape).
-    expect(figure).to have_css("button.govuk-button.govuk-button--secondary.govuk-attachment__retry")
+    expect(figure).to have_button(class: %w[govuk-button govuk-button--secondary govuk-attachment__retry])
 
     click_button "Continue"
 

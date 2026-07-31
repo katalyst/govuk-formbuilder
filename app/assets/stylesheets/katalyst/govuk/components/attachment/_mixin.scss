@@ -19,6 +19,7 @@ $attachment-border-width: 2px;
       grid-area: preview;
       max-width: 4rem;
       aspect-ratio: 1/1;
+      object-fit: contain;
     }
 
     .caption {

@@ -35,7 +35,25 @@ RSpec.describe "Profiles" do
     end
 
     it "emits the formbuilder javascript initialiser" do
-      expect(response.body).to include('import {init} from "@katalyst/govuk-formbuilder"')
+      expect(response.body).to include('import {initAll} from "@katalyst/govuk-formbuilder"')
+    end
+
+    it "omits the brand option when the brand is the default" do
+      expect(response.body).to include("initAll();")
+    end
+
+    context "with a non-default brand" do
+      around do |example|
+        GOVUKDesignSystemFormBuilder.brand = "defra"
+        get new_profile_path
+        example.run
+      ensure
+        GOVUKDesignSystemFormBuilder.brand = "govuk"
+      end
+
+      it "passes the brand to initAll" do
+        expect(response.body).to include('initAll({brand: "defra"});')
+      end
     end
   end
 

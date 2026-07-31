@@ -2,15 +2,15 @@
 
 require "rails_helper"
 
-# The `govuk_formbuilder_init` snippet at the end of <body> marks the page as
-# JS-capable (body classes js-enabled / govuk-frontend-supported) and runs
-# govuk-frontend's initAll. Turbo re-executes body scripts on a replace
-# render, but a morph retains the live script node, so the snippet never
-# re-runs: the incoming server body carries no class attribute, the morph
-# strips the JS-set markers, and initAll — re-run from the dummy app's
-# `turbo:render` handler — declines to initialise anything without the
-# support marker, swallowing the error. These examples pin the recovery:
-# support markers and component initialisation must survive morphs.
+# The `govuk_formbuilder_init` snippet at the end of <body> runs the bundle's
+# initAll, which marks the page as JS-capable (body classes js-enabled /
+# govuk-frontend-supported), enhances it, and observes <body>. Turbo
+# re-executes body scripts on a replace render, but a morph retains the live
+# script node, so the snippet never re-runs: the incoming server body carries
+# no class attribute, the morph strips the JS-set markers, and no lifecycle
+# event fires. The bundle's marker-restore observer is the recovery — missing
+# markers signal the morph; re-mark, then re-sweep. These examples pin that
+# recovery: support markers and component initialisation must survive morphs.
 #
 # A failed profile update is the morph driver: the layout opts into
 # `turbo-refresh-method: morph`, so the 422 re-render morphs in place. The
@@ -46,8 +46,8 @@ RSpec.describe "GOV.UK Frontend javascript re-initialising after a morph", :aggr
     # Re-enhancement sweeps overlap by design — the marker-restore sweep and
     # the arriving-node sweep can visit the same root in one morph — so an
     # already-enhanced root must be skipped, not constructed-and-caught:
-    # initAll logs every catch, which would spam the console with InitErrors
-    # on every morph.
+    # the sweep logs every catch, which would spam the console with
+    # InitErrors on every morph.
     page.execute_script(<<~JS)
       window.__initErrors = [];
       const log = console.log.bind(console);

@@ -25,12 +25,14 @@ class ExamplesController < ApplicationController
     :old_department_id, :old_department_description, :laptop,
     :other_language, :terms_and_conditions_agreed,
     :address_one, :address_two, :address_three, :postcode, :profile_photo,
+    :avatar, :cv,
     "date_of_birth(1i)", "date_of_birth(2i)", "date_of_birth(3i)",
     "graduation_month(1i)", "graduation_month(2i)", "graduation_month(3i)",
     "date_of_trade(1i)", "date_of_trade(2i)", "date_of_trade(3i)",
     "time_of_birth(1i)", "time_of_birth(2i)", "time_of_birth(3i)",
     "time_of_birth(4i)", "time_of_birth(5i)", "time_of_birth(6i)",
-    { department_ids: [], lunch_ids: [], wednesday_lunch_ids: [], languages: [], countries: [] }
+    { department_ids: [], lunch_ids: [], wednesday_lunch_ids: [], languages: [], countries: [],
+      gallery: [] }
   ].freeze
 
   def show

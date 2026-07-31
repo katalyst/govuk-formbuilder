@@ -7,10 +7,15 @@ import {
 // CSS classes written or queried by this bundle follow the configured
 // brand, mirroring the Ruby builder's class prefixes. Behavioural wiring
 // (Stimulus identifiers, data-actions, events) is always govuk-prefixed.
-// Set from the govuk_formbuilder_init snippet via init({ brand }).
+// Set from the govuk_formbuilder_init snippet via initAll({ brand }).
 const config = { brand: "govuk" };
 
 export default config;
+
+// The pseudo upload button, identified structurally — the button fronting
+// the (hidden) file input it precedes — so the selector holds under any
+// brand.
+export const uploadButtonSelector = "[type='button']:has(+ input[type='file'])";
 
 // The attachment field replaces govuk-frontend's FileUpload, so its
 // vocabulary is FileUpload's strings plus the attachment additions — one
