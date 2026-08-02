@@ -3,11 +3,13 @@
 require "rails_helper"
 
 # Dropping files onto the attachment field, ported from govuk-frontend's
-# FileUpload: the button is the drop target, a valid drag shows the dragging
-# state and is announced, and a drop fills the input exactly as choosing files
-# does. Drops are simulated with a synthetic DragEvent carrying a DataTransfer,
-# which exercises the real controller in the browser (OS-level drag can't be
-# driven from Capybara).
+# FileUpload with one intended difference: the drop target is the whole
+# wrapper, figures included, not just the button (upstream's button is its
+# whole zone; ours shares the wrapper with figures). A valid drag shows the
+# dragging state and is announced, and a drop fills the input exactly as
+# choosing files does. Drops are simulated with a synthetic DragEvent
+# carrying a DataTransfer, which exercises the real controller in the
+# browser (OS-level drag can't be driven from Capybara).
 RSpec.describe "Dropping files onto an attachment field", :aggregate_failures do
   include AttachmentFieldHelpers
   include DirectUploadHelpers
@@ -51,6 +53,25 @@ RSpec.describe "Dropping files onto an attachment field", :aggregate_failures do
 
       expect(cv_field).to have_no_css("figure.govuk-attachment")
     end
+
+    it "accepts a drop on a figure, away from the button" do
+      visit edit_profile_path(profile)
+
+      # avatar always carries its persisted figure, making the non-button
+      # surface of the drop zone real.
+      drop_files("profile[avatar]", "dropped.png", target: "figure.govuk-attachment")
+
+      expect(avatar_field).to have_css("figure.govuk-attachment .filename", text: "dropped.png")
+    end
+
+    it "ignores a drop on a disabled field" do
+      visit edit_profile_path(profile)
+
+      page.execute_script("document.querySelector(`input[type=file][name='profile[cv]']`).disabled = true")
+      drop_files("profile[cv]", "dropped.png")
+
+      expect(cv_field).to have_no_css("figure.govuk-attachment")
+    end
   end
 
   it "shows the dragging state and announces entering and leaving the drop zone" do
@@ -72,18 +93,19 @@ RSpec.describe "Dropping files onto an attachment field", :aggregate_failures do
     ".govuk-file-upload-wrapper:has(input[name='profile[gallery][]']) .govuk-file-upload-button"
   end
 
-  # Dispatch a synthetic drop of `filenames` onto the field's button. The
-  # File contents are stub bytes — enough for a preview and a direct upload.
-  def drop_files(input_name, *filenames)
-    page.execute_script(<<~JS, input_name, filenames)
-      const [name, names] = arguments;
-      const input = document.querySelector(`input[type=file][name="${name}"]`);
-      const button = input
-        .closest(".govuk-file-upload-wrapper")
-        .querySelector(".govuk-file-upload-button");
+  # Dispatch a synthetic drop of `filenames` onto the field's wrapper — or
+  # onto `target`, a selector within it. The File contents are stub bytes —
+  # enough for a preview and a direct upload.
+  def drop_files(input_name, *filenames, target: nil)
+    page.execute_script(<<~JS, input_name, filenames, target)
+      const [name, names, target] = arguments;
+      const wrapper = document
+        .querySelector(`input[type=file][name="${name}"]`)
+        .closest(".govuk-file-upload-wrapper");
+      const element = target ? wrapper.querySelector(target) : wrapper;
       const data = new DataTransfer();
       names.forEach((n) => data.items.add(new File(["stub"], n, { type: "image/png" })));
-      button.dispatchEvent(
+      element.dispatchEvent(
         new DragEvent("drop", { dataTransfer: data, bubbles: true, cancelable: true }),
       );
     JS

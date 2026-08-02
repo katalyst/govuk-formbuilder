@@ -22,6 +22,11 @@ export default class FileUploadController extends Controller {
     document.addEventListener("dragenter", this.onDragenter);
     document.addEventListener("dragleave", this.onDragleave);
 
+    // The whole wrapper — figures included — is the drop target: a file
+    // dragged anywhere over the field can be dropped.
+    this.element.addEventListener("dragover", this.onDragover);
+    this.element.addEventListener("drop", this.onDrop);
+
     this.enhance();
 
     // A morph reconciles this element against a server response that has no
@@ -37,8 +42,8 @@ export default class FileUploadController extends Controller {
     this.morphObserver?.disconnect();
     this.disabledObserver?.disconnect();
     this.uploadButton?.removeEventListener("click", this.onClick);
-    this.uploadButton?.removeEventListener("dragover", this.onDragover);
-    this.uploadButton?.removeEventListener("drop", this.onDrop);
+    this.element.removeEventListener("dragover", this.onDragover);
+    this.element.removeEventListener("drop", this.onDrop);
     this.unbindInput();
     document.removeEventListener("dragenter", this.onDragenter);
     document.removeEventListener("dragleave", this.onDragleave);
@@ -62,11 +67,9 @@ export default class FileUploadController extends Controller {
       uploadButton = createUploadButton(this.id, this.i18n, fileInput);
       fileInput.insertAdjacentElement("beforebegin", uploadButton);
 
-      // The button is the drop target; its listeners die with a stripped
-      // button and rebind with its replacement.
+      // The click listener dies with a stripped button and rebinds with
+      // its replacement; the drag listeners live on the wrapper.
       uploadButton.addEventListener("click", this.onClick);
-      uploadButton.addEventListener("dragover", this.onDragover);
-      uploadButton.addEventListener("drop", this.onDrop);
     }
 
     // Appended to the drop zone (not between button and input, whose
@@ -146,11 +149,11 @@ export default class FileUploadController extends Controller {
     this.fileInput.click();
   };
 
-  // Drag & drop mirrors govuk-frontend's FileUpload: the button is the drop
-  // target, the whole drop zone shows the dragging state, and enter/leave
-  // are announced.
-  // Prevent the default so the button is a valid drop target.
+  // Drag & drop: the whole wrapper is the drop target, the button shows
+  // the dragging state, and enter/leave are announced.
   onDragover = (event) => {
+    if (this.fileInput.disabled) return;
+
     event.preventDefault();
   };
 
@@ -171,6 +174,8 @@ export default class FileUploadController extends Controller {
   };
 
   onDrop = (event) => {
+    if (this.fileInput.disabled) return;
+
     event.preventDefault();
 
     if (event.dataTransfer && this.canFillInput(event.dataTransfer)) {

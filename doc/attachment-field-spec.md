@@ -27,7 +27,9 @@ direct upload, and a full no-JavaScript fallback.
    than `ElementError`; count strings even for one file (C10 records why);
    our announcements region renders inside the wrapper — scoped finds and
    morph re-enhancement keep it — where govuk-frontend's sits after the
-   drop zone.
+   drop zone; and our drop listeners bind to the wrapper where upstream's
+   bind to its button — equivalent zones, since upstream's button is its
+   whole drop zone while ours shares the wrapper with figures.
    govuk-frontend's own component stays supported for plain file fields
    (`initAll` initialises `data-module="govuk-file-upload"`), so the
    **exclusivity invariant** is critical: every file input is enhanced by
@@ -113,8 +115,10 @@ form group (data-controller for the drop zone)
 
 - Without JS the native file input is a plain visible input; with JS it is
   hidden and fronted by the pseudo button, which triggers the browser file
-  picker. The drop target is the pseudo button/drop region, not the whole
-  form group: a valid drag over it adds `--dragging` to the button and is
+  picker. The drop target is the whole drop zone — the wrapper element,
+  figures included — not just the pseudo button (a file dragged anywhere
+  over the field can be dropped), and not the form group around it: a
+  valid drag over the wrapper adds `--dragging` to the button and is
   announced through a JS-injected visually-hidden assertive region
   (`.govuk-file-upload-announcements`), and a drop fills the input exactly
   as choosing files does. A drop is accepted only within the input's
