@@ -525,7 +525,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
     # set, so an engine-mounted form must resolve the preview URL through
     # main_app — the same resolution direct_upload_url uses.
     describe "preview URL resolution" do
-      let(:representation) { blob.representation(resize_to_limit: [100, 100]) }
+      let(:representation) { blob.representation(resize_to_fill: [256, 256]) }
 
       it "renders the preview from the representation route" do
         expect(html.find("figure.govuk-attachment img")[:src])

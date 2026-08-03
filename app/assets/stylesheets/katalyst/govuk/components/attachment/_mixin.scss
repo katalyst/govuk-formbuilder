@@ -1,4 +1,5 @@
 @use "govuk-frontend/dist/govuk/base";
+@use "govuk-frontend/dist/govuk/core/typography";
 
 $attachment-background-colour: base.govuk-colour("black", $variant: "tint-95");
 $attachment-border-width: 2px;
@@ -19,13 +20,14 @@ $attachment-border-width: 2px;
       grid-area: preview;
       max-width: 4rem;
       aspect-ratio: 1/1;
-      object-fit: contain;
+      object-fit: cover;
     }
 
     .caption {
       display: flex;
       flex-direction: column;
       grid-area: caption;
+      @include base.govuk-font($size: 16, $line-height: 1.25);
     }
 
     .filename {
