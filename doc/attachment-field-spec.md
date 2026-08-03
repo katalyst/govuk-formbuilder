@@ -195,13 +195,15 @@ method) resolves the representation route with the same `main_app` fallback
 and returns nil when no route is available — the figure then renders without
 a preview — so engine builders can override preview resolution too. The
 preview transformation is configurable
-(`config.attachment_preview_representation`); the default fits the image
-within 100×100 preserving aspect, never upscaling
-(`resize_to_limit`). Previews are contained, not cropped: the whole image
-shows, letterboxed by CSS (`object-fit: contain` in a square preview box)
-rather than by baked-in padding — variants carry no background bars, and
-client-inserted previews get the same treatment so framing doesn't change
-when a figure round-trips.
+(`config.attachment_preview_representation`); the default is a crisp
+square — `resize_to_fill: [256, 256]`, centre-cropped by vips, sized with
+leeway above the preview box for dense displays. Framing is CSS-only:
+previews render `object-fit: cover` in a square box, client-inserted
+previews get the same treatment so framing doesn't change when a figure
+round-trips, and a consumer stylesheet can reframe without touching the
+gem — noting the default variant is already square-cropped, so a consumer
+wanting whole-image (`contain`) previews overrides the representation
+too.
 
 `multiple` is inferred from the attribute's ActiveStorage reflection
 (`has_many_attached` → true), and an explicit `multiple:` argument is
@@ -238,7 +240,10 @@ Each criterion names the test type that verifies it.
   alone — identity, not state: the size and status spans stay visible (and
   inside the caption's atomic announcements) without entering any name.
 - **A7** Non-image blobs (e.g. PDF) render figure, caption and select without
-  an `img` and without error.
+  an `img` and without error — client-inserted figures for non-image files
+  likewise carry no preview `img`. The reserved preview space stays empty,
+  by decision: no placeholder, and a broken image from a failed lazy URL
+  is left as-is (§6's degradation).
 - **A8** The field renders exactly one blank hidden input (the keeper),
   before any figure's select — scalar and `has_many` alike (Rails'
   auto-blank is suppressed, so there is never a second blank).

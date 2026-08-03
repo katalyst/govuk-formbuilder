@@ -46,6 +46,11 @@ export default class AttachmentController extends Controller {
 
     if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      this.imageTag?.remove();
+      return;
+    }
+
     const preview = new FileReader();
     preview.onload = this.onPreviewReady;
     preview.readAsDataURL(file);

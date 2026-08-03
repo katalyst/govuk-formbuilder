@@ -124,7 +124,7 @@ route. The transformation is configurable:
 
 ```ruby
 GOVUKDesignSystemFormBuilder.config.attachment_preview_representation =
-  { resize_to_limit: [100, 100] } # the default
+  { resize_to_fill: [256, 256] } # the default
 ```
 
 ### Strings and internationalisation
