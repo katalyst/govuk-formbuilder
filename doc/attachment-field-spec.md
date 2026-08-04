@@ -103,6 +103,7 @@ Form group structure (top to bottom):
 ```
 form group (data-controller for the drop zone)
   label
+  supplemental content (block content — upstream's placement)
   hint
   error message(s)
   before_input content
@@ -110,8 +111,13 @@ form group (data-controller for the drop zone)
   pseudo upload button + drop region ("Choose files" / drop instruction)
   native file input (hidden when JS is active; data-direct-upload-url)
   after_input content
-  supplemental content (block content, e.g. alt text / caption fields)
 ```
+
+Block content keeps upstream govuk_design_system_formbuilder's placement —
+after the label, before the input — matching every other element. Fields
+meant to follow the upload (alt text, caption) belong in `after_input:` or
+as sibling fields after the group; the legacy elements' render-the-block-
+last order is not preserved.
 
 - Without JS the native file input is a plain visible input; with JS it is
   hidden and fronted by the pseudo button, which triggers the browser file
