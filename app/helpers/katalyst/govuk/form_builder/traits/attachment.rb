@@ -116,9 +116,8 @@ module Katalyst
             if @remove_button_text
               # %{filename} is the option placeholder (govuk-frontend's i18n
               # convention), substituted directly — not a Ruby format token.
-              # rubocop:disable Style/FormatStringToken
+              # rubocop:disable-next Style/FormatStringToken
               @remove_button_text.gsub("%{filename}", blob.filename.to_s)
-              # rubocop:enable Style/FormatStringToken
             else
               attachment_translation(:remove_button, filename: blob.filename.to_s)
             end

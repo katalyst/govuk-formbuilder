@@ -9,7 +9,7 @@ module Katalyst
         # stream inserts). Render at the end of <body>; on a Turbo replace
         # render the snippet re-executes with the new body, and everything it
         # sets up is scoped to the body element it ran against.
-        # rubocop:disable Rails/OutputSafety
+        # rubocop:disable-next Rails/OutputSafety
         def govuk_formbuilder_init
           tag.script type: "module", nonce: request.content_security_policy_nonce do
             <<~JS.html_safe
@@ -18,7 +18,6 @@ module Katalyst
             JS
           end
         end
-        # rubocop:enable Rails/OutputSafety
 
         private
 

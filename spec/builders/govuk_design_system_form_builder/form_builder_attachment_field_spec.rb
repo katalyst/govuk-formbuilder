@@ -146,7 +146,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
     # must drive both the data attribute (for client figures) and the
     # trait's own markup — string parity between the two figure sources
     # depends on the shared option.
-    # rubocop:disable Style/FormatStringToken
+    # rubocop:disable-next Style/FormatStringToken
     context "with remove control options" do
       subject(:html) do
         govuk_attachment_field(:avatar, remove_button_text: "Bin %{filename}", remove_button_content_text: "🗑")
@@ -170,7 +170,6 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         expect(html).to have_css("figure.govuk-attachment .actions button", text: "🗑")
       end
     end
-    # rubocop:enable Style/FormatStringToken
 
     # The attachment strings live in the gem's locale files
     # (config/locales), so a consuming app localises by adding Rails
