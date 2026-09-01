@@ -528,7 +528,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
 
       it "renders the preview from the representation route" do
         expect(html.find("figure.govuk-attachment img")[:src])
-          .to eq(helper.rails_representation_path(representation))
+          .to eq(helper.rails_representation_url(representation))
       end
 
       it "renders the preview from the configured representation" do
@@ -537,22 +537,22 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         config.attachment_preview_representation = { resize_to_limit: [50, 50] }
 
         expect(html.find("figure.govuk-attachment img")[:src])
-          .to eq(helper.rails_representation_path(blob.representation(resize_to_limit: [50, 50])))
+          .to eq(helper.rails_representation_url(blob.representation(resize_to_limit: [50, 50])))
       ensure
         config.attachment_preview_representation = original
       end
 
       it "resolves the preview URL through main_app" do
         allow(helper).to receive(:respond_to?).and_call_original
-        allow(helper).to receive(:respond_to?).with(:rails_representation_path).and_return(false)
+        allow(helper).to receive(:respond_to?).with(:rails_representation_url).and_return(false)
 
         expect(html.find("figure.govuk-attachment img")[:src])
-          .to eq(helper.main_app.rails_representation_path(representation))
+          .to eq(helper.main_app.rails_representation_url(representation))
       end
 
       it "renders no preview when no representation route is available" do
         allow(helper).to receive(:respond_to?).and_call_original
-        allow(helper).to receive(:respond_to?).with(:rails_representation_path).and_return(false)
+        allow(helper).to receive(:respond_to?).with(:rails_representation_url).and_return(false)
         allow(helper).to receive(:main_app).and_return(Object.new)
 
         expect(html).to have_no_css("figure.govuk-attachment img")

@@ -473,10 +473,10 @@ module Katalyst
         # @param [ActiveStorage::Variant,ActiveStorage::VariantWithRecord,ActiveStorage::Preview] representation
         # @return [String,nil]
         def attachment_preview_url(representation)
-          if @template.respond_to?(:rails_representation_path)
-            @template.rails_representation_path(representation)
-          elsif @template.respond_to?(:main_app) && @template.main_app.respond_to?(:rails_representation_path)
-            @template.main_app.rails_representation_path(representation)
+          if @template.respond_to?(:rails_representation_url)
+            @template.rails_representation_url(representation)
+          elsif @template.respond_to?(:main_app) && @template.main_app.respond_to?(:rails_representation_url)
+            @template.main_app.rails_representation_url(representation)
           end
         end
 
