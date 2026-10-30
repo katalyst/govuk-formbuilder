@@ -35,7 +35,7 @@ RSpec.describe "Legacy file fields javascript" do
         click_button(class: "file-destroy")
 
         expect(page).to have_css("[data-govuk-image-field-target=preview]", visible: :hidden)
-        expect(find("input[name='profile[avatar]']", visible: :all).value).to eq("")
+        expect(page).to have_field(name: "profile[avatar]", visible: :all, with: "")
       end
     end
   end
@@ -56,7 +56,7 @@ RSpec.describe "Legacy file fields javascript" do
         click_button(class: "file-destroy")
 
         expect(page).to have_css("[data-govuk-document-field-target=preview]", visible: :hidden)
-        expect(find("input[name='profile[cv]']", visible: :all).value).to eq("")
+        expect(page).to have_field(name: "profile[cv]", visible: :all, with: "")
       end
     end
   end

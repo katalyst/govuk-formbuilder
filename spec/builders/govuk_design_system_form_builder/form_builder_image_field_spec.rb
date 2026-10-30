@@ -45,7 +45,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         html    = govuk_image_field(:avatar, hint: { text: "Max 5MB" })
         hint_id = html.find(".govuk-hint", visible: :all)[:id]
 
-        expect(html.find("input[type=file]", visible: :all)["aria-describedby"]).to eq(hint_id)
+        expect(html.find_field(type: "file", visible: :all)["aria-describedby"]).to eq(hint_id)
       end
 
       it "renders the supplied label text" do

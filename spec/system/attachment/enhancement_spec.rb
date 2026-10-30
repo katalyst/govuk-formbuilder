@@ -44,7 +44,7 @@ RSpec.describe "Attachment field enhancement", :aggregate_failures do
 
     field  = attachment_field("profile[avatar]")
     button = field.find(".govuk-file-upload-button", wait: 5)
-    input  = field.find("input[type=file]", visible: :all)
+    input  = field.find_field(type: "file", visible: :all)
 
     described = button["aria-describedby"]
 
@@ -74,7 +74,7 @@ RSpec.describe "Attachment field enhancement", :aggregate_failures do
 
     # A consumer (or a Turbo refresh) re-enables the input; the observer keeps
     # the injected button and wrapper in step.
-    input = field.find("input[type=file]", visible: :all)
+    input = field.find_field(type: "file", visible: :all, disabled: true)
     page.execute_script("arguments[0].disabled = false", input)
 
     expect(field).to have_css(".govuk-file-upload-button:not([disabled])")

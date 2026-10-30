@@ -64,7 +64,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         html    = govuk_attachment_field(:avatar, hint: { text: "Max 5MB" })
         hint_id = html.find(".govuk-hint", visible: :all)[:id]
 
-        expect(html.find("input[type=file]", visible: :all)["aria-describedby"]).to eq(hint_id)
+        expect(html.find_field(type: "file", visible: :all)["aria-describedby"]).to eq(hint_id)
       end
 
       it "renders the supplied label text" do
@@ -466,7 +466,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
 
     describe "#direct_upload_url" do
       it "adds data-direct-upload-url by default" do
-        input = html.find("input[type=file]", visible: :all)
+        input = html.find_field(type: "file", visible: :all)
 
         expect(input["data-direct-upload-url"]).to eq(helper.rails_direct_uploads_url)
       end
@@ -485,7 +485,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
 
       it "uses direct_upload_url when provided" do
         html  = govuk_attachment_field(:avatar, direct_upload_url: "/override")
-        input = html.find("input[type=file]", visible: :all)
+        input = html.find_field(type: "file", visible: :all)
 
         expect(input["data-direct-upload-url"]).to eq("/override")
       end
@@ -497,7 +497,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
           end
         end
 
-        input = html.find("input[type=file]", visible: :all)
+        input = html.find_field(type: "file", visible: :all)
 
         expect(input["data-direct-upload-url"]).to eq("/extend")
       end
@@ -506,7 +506,7 @@ RSpec.describe GOVUKDesignSystemFormBuilder::FormBuilder do
         allow(helper).to receive(:respond_to?).and_call_original
         allow(helper).to receive(:respond_to?).with(:rails_direct_uploads_url).and_return(false)
 
-        input = html.find("input[type=file]", visible: :all)
+        input = html.find_field(type: "file", visible: :all)
 
         expect(input["data-direct-upload-url"]).to eq(helper.main_app.rails_direct_uploads_url)
       end
